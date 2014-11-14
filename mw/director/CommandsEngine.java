@@ -18,29 +18,32 @@ public class CommandsEngine {
 	private boolean engineRunning = false;
 	private final AtomicLong tickCounter = new AtomicLong();
 	private final PriorityQueue<APITimer> timers = new PriorityQueue<APITimer>();
+	private final API api;
 	
 	public CommandsEngine(EntityPlayer player, String jsFileData) {
 		ScriptEngine jsEngine = new ScriptEngineManager().getEngineByName("javascript");
 		if (jsEngine == null) {
-			player.addChatMessage("Could not load javascript engine.");
-        		FMLLog.severe("Could not load javascript engine.");
-        		return;
+		player.addChatMessage("Could not load javascript engine.");
+    		FMLLog.severe("Could not load javascript engine.");
+    		this.api = null;
+    		return;
+    	}
+		this.api = new API(player, this);
+    	jsEngine.put("api", this.api);
+    	try {
+        	if (Compilable.class.isAssignableFrom(jsEngine.getClass())) {
+        		Compilable c = (Compilable) jsEngine;
+        		CompiledScript cs;
+				cs = c.compile(jsFileData);
+        		cs.eval();
+        	} else {
+        		jsEngine.eval(jsFileData);
         	}
-        	jsEngine.put("api", new API(player, this));
-        	try {
-	        	if (Compilable.class.isAssignableFrom(jsEngine.getClass())) {
-	        		Compilable c = (Compilable) jsEngine;
-	        		CompiledScript cs;
-					cs = c.compile(jsFileData);
-	        		cs.eval();
-	        	} else {
-	        		jsEngine.eval(jsFileData);
-	        	}
-        	} catch (ScriptException e) {
-        		player.addChatMessage("Could not fully parse (" + e.getMessage() + ")");
-			return;
-		}
-        	player.addChatMessage("Engine ready");
+    	} catch (ScriptException e) {
+    		player.addChatMessage("Could not fully parse (" + e.getMessage() + ")");
+    		return;
+    	}
+    	player.addChatMessage("Engine ready");
 	}
 	
 	public boolean start() {
@@ -73,12 +76,20 @@ public class CommandsEngine {
 					this.timers.offer(at);
 				}
 			}
+			this.api.camera.reset();
 			this.engineRunning = false;
 			return -1;
 		}
 		return 20;
 	}
 
+	public APIWaiter newWaiter(IAPICallback function) {
+		APIWaiter a = new APIWaiter(this, function);
+		a.update(this.tickCounter.get());
+		this.timers.offer(a);
+		return a;
+	}
+	
 	public APITimer newTicker(IAPICallback function, int ticks, boolean repeat) {
 		APITimer a = new APITimer(this, ticks, function, repeat);
 		a.update(this.tickCounter.get());

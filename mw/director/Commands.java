@@ -23,7 +23,7 @@ public class Commands implements ICommand, IScheduledTickHandler  {
 	
 	@Override
 	public int compareTo(Object o) {
-		return o instanceof DirectorMod ? 0 : 1;
+		return o instanceof Commands ? 0 : 1;
 	}
 
 	@Override
@@ -55,26 +55,27 @@ public class Commands implements ICommand, IScheduledTickHandler  {
 					message = "No file loaded";
 				} else if(!thisEngine.start()) {
 					message = "No actions to start";
+				} else {
+					message = "Starting";
 				}
-				return;
 			} else if (args[0].equals("stop")) {
 				if (thisEngine == null) {
 					message = "No actions to stop";
 				} else if (thisEngine.stop()) {
 					message = "Actions stopped";
 				} else {
-					message = "Actions already stopped";
+					message = "No actions running";
 				}
 			} else {
-			String jsFile = "";
-			for (int i = 0; i < args.length; i++) {
-				if (i > 1) {
-					jsFile += " ";
+				String jsFile = "";
+				for (int i = 0; i < args.length; i++) {
+					if (i > 1) {
+						jsFile += " ";
+					}
+					jsFile += args[i];
 				}
-				jsFile += args[i];
-			}
-			PacketHandler.sendJSFileRequest((Player) player, jsFile);
-			message = "Loading file \"" + jsFile + "\"";
+				DirectorPacketHandler.sendJSFileRequest((Player) player, jsFile);
+				message = "Loading file \"" + jsFile + "\"";
 			}
 		}
 		if (message.length() == 0) {

@@ -2,7 +2,7 @@ package mw.director;
 
 import cpw.mods.fml.common.FMLLog;
 
-public class APITimer implements Comparable<APITimer>{
+public class APITimer implements Comparable<APITimer> {
 	
 	private int ticks;
 	private long tickAt;
