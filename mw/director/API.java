@@ -41,6 +41,12 @@ public class API {
 	
 	public static final String cloak = "cloak";
 	
+	public static final int hand = 0;
+	public static final int feet = 1;
+	public static final int legs = 2;
+	public static final int chest = 3;
+	public static final int headgear = 4;
+	
 	private final int playerId; 
 	private final World world;
 	protected final CommandsEngine dce;
@@ -57,22 +63,11 @@ public class API {
 	}
 	
 	public APIEntity spawn(String entityStr, float x, float y, float z) {
-		Integer entity;
-		/*if (entityStr.equals("Human")) {
-			entity = Integer.valueOf(-1);
-		} else {*/
-			entity = (Integer) EntityList.stringToIDMapping.get(entityStr);
-		//}
-		
+		Integer entity = (Integer) EntityList.stringToIDMapping.get(entityStr);
 		if (entity != null) {
 			EntityDirector ed = new EntityDirector(this.world, x, y, z, entity.intValue());
 			if (this.world.spawnEntityInWorld(ed)) {
-				Class<? extends Entity> entityClass;
-				/*if (entity == -1) {
-					entityClass = Human.class;
-				} else {*/
-					entityClass = (Class<? extends Entity>) EntityList.IDtoClassMapping.get(entity);
-				//}
+				Class<? extends Entity> entityClass = (Class<? extends Entity>) EntityList.IDtoClassMapping.get(entity);
 				Class<? extends APIEntity> apiClass = DirectorMod.instance.apis.get(entityClass);
 				if (apiClass == null) {
 					return new APIEntity(this, ed, entityStr, entityClass);

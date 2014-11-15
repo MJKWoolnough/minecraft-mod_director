@@ -10,6 +10,7 @@ import mw.library.PacketHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -33,6 +34,9 @@ public class DirectorPacketHandler extends PacketHandler {
 	private static final byte SETBOBBING = 10;
 	private static final byte SETFOV = 11;
 	private static final byte SHOWGUI = 12;
+	private static final byte SETINVENTORY = 13;
+	private static final byte DIEANIMATION = 14;
+	private static final byte DIESPARKLES = 15;
 	
 	private static DirectorPacketHandler instance;
 	
@@ -85,6 +89,15 @@ public class DirectorPacketHandler extends PacketHandler {
 				break;
 			case SHOWGUI:
 				this.handleShowGUI(in);
+				break;
+			case SETINVENTORY:
+				this.handleSetInventory(world, in);
+				break;
+			case DIEANIMATION:
+				this.handleDieAnimation(world, in);
+				break;
+			case DIESPARKLES:
+				this.handleDieSparkles(world, in);
 				break;
 			}
 		}
@@ -234,6 +247,41 @@ public class DirectorPacketHandler extends PacketHandler {
 	
 	private void handleShowGUI(ByteArrayDataInput in) {
 		Minecraft.getMinecraft().gameSettings.hideGUI = !in.readBoolean();
+	}
+	
+	private void handleSetInventory(World world, ByteArrayDataInput in) {
+		int directorEntityId = in.readInt();
+		int slotId = in.readByte();
+		int itemId = in.readInt();
+		int meta = in.readInt();
+		EntityDirector director = this.getDirector(world, directorEntityId);
+		if (director == null) {
+			return;
+		}
+		director.setCurrentItemOrArmor(slotId, new ItemStack(itemId, 1, meta));
+	}
+	
+	private void handleDieAnimation(World world, ByteArrayDataInput in) {
+		int directorEntityId = in.readInt();
+		boolean doDie = in.readBoolean();
+		EntityDirector director = this.getDirector(world, directorEntityId);
+		if (director == null) {
+			return;
+		}
+		if (doDie) {
+			director.die();
+		} else {
+			director.undie();
+		}
+	}
+	
+	private void handleDieSparkles(World world, ByteArrayDataInput in) {
+		int directorEntityId = in.readInt();
+		EntityDirector director = this.getDirector(world, directorEntityId);
+		if (director == null) {
+			return;
+		}
+		director.dieSparkles();
 	}
 	
 	private EntityDirector getDirector(World world, int directorEntityId) {
@@ -390,5 +438,42 @@ public class DirectorPacketHandler extends PacketHandler {
 			return;
 		}
 		DirectorPacketHandler.instance.sendPacket(pd, true, player);
+	}
+
+	public static void sendSetInventory(int entityId, int slotId, int itemId, int meta) {
+		PacketData pd = new PacketData(1 + 4 + 1 + 4 + 4);
+		try {
+			pd.writeByte(SETINVENTORY);
+			pd.writeInt(entityId);
+			pd.writeByte(slotId);
+			pd.writeInt(itemId);
+			pd.writeInt(meta);
+		} catch (IOException e) {
+			return;
+		}
+		DirectorPacketHandler.instance.sendPacket(pd, true);
+	}
+
+	public static void sendDieAnimation(int entityId, boolean doDie) {
+		PacketData pd = new PacketData(1 + 4 + 1);
+		try {
+			pd.writeByte(DIEANIMATION);
+			pd.writeInt(entityId);
+			pd.writeBoolean(doDie);
+		} catch (IOException e) {
+			return;
+		}
+		DirectorPacketHandler.instance.sendPacket(pd, true);
+	}
+
+	public static void sendDieSparkles(int entityId) {
+		PacketData pd = new PacketData(1 + 4);
+		try {
+			pd.writeByte(DIESPARKLES);
+			pd.writeInt(entityId);
+		} catch (IOException e) {
+			return;
+		}
+		DirectorPacketHandler.instance.sendPacket(pd, true);
 	}
 }

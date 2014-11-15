@@ -188,25 +188,24 @@ public class EntityDirector extends EntityLivingBase implements IEntityAdditiona
 	
 	@Override
 	public void onUpdate() {
-		this.prevPosX = this.posX;
-        this.prevPosY = this.posY;
-        this.prevPosZ = this.posZ;
+		this.entity.prevPosX = this.prevPosX = this.posX;
+		this.entity.prevPosY = this.prevPosY = this.posY;
+		this.entity.prevPosZ = this.prevPosZ = this.posZ;
 		this.aod.tick();
 		this.scod.tick();
 		this.scod.scaleOverrides(this);
 		this.speedUpdates();
 		this.aod.bodyOverrides(this);
+		if (this.entityLB != null) {
+			this.onLivingUpdate();
+		}
 		if (this.worldObj.isRemote) {
 			this.onClientUpdate();
 		}
 	}
 	
 	@Override
-	public void onLivingUpdate() {
-        if (this.hurtTime > 0) {
-            this.hurtTime--;
-        }
-	}
+	public void onLivingUpdate() {}
 	
 	public void onClientUpdate() {
 		this.pod.tick();
@@ -224,6 +223,9 @@ public class EntityDirector extends EntityLivingBase implements IEntityAdditiona
         this.entityLB.limbSwing = this.limbSwing;
         this.entityLB.prevRenderYawOffset = this.prevRotationYaw;
 		this.entityLB.renderYawOffset = this.rotationYaw;
+		if (this.entityLB.hurtTime > 0) {
+            this.entityLB.hurtTime--;
+        }
         if (this.entityLB.deathTime > 0 && this.entityLB.deathTime < 20) {
 			this.entityLB.deathTime++;
         }
@@ -232,32 +234,47 @@ public class EntityDirector extends EntityLivingBase implements IEntityAdditiona
 	
 	private void speedUpdates() {
 		this.sod.updateSpeed(this);
-		this.lastTickPosX = this.posX;
-		this.lastTickPosY = this.posY;
-		this.lastTickPosZ = this.posZ;
+		this.entity.lastTickPosX = this.lastTickPosX = this.posX;
+		this.entity.lastTickPosY = this.lastTickPosY = this.posY;
+		this.entity.lastTickPosZ = this.lastTickPosZ = this.posZ;
 		this.moveEntityWithHeading(0, 0);
+		this.entity.posX = this.posX;
+		this.entity.posY = this.posY;
+		this.entity.posZ = this.posZ;
 	}
 	
 	public void remove() {
 		this.isDead = true;
+		if (this.entityLB != null) {
+			DirectorPacketHandler.sendDieSparkles(this.entityId);
+		}
+	}
+	
+	public void dieSparkles() {
+		if (this.entityLB.deathTime > 0) {
+			this.deathTime = 19;
+			boolean oldDeath = this.isDead;
+			this.onDeathUpdate();
+			this.isDead = oldDeath;
+		}
 	}
 	
 	public void die() {
-		this.deathTime = 1;
+		if (this.entityLB != null) {
+			this.entityLB.deathTime = 1;
+		}
 	}
 	
 	public void undie() {
-		this.deathTime = 0;
+		if (this.entityLB != null) {
+			this.entityLB.deathTime = 0;
+		}
 	}
 	
 	@Override
 	public void writeToNBT(NBTTagCompound nbtTag) {
 		super.writeToNBT(nbtTag);
-		/*if (this.entity instanceof Human) {
-			nbtTag.setInteger(nbtName, -1);
-		} else {*/
-			nbtTag.setInteger(nbtName, EntityList.getEntityID(this.entity));
-		//}
+		nbtTag.setInteger(nbtName, EntityList.getEntityID(this.entity));
 	}
 	
 	@Override
@@ -310,13 +327,55 @@ public class EntityDirector extends EntityLivingBase implements IEntityAdditiona
 		return count;
 	}
 	
+	@Override
+	public void playStepSound(int x, int y, int z, int blockId) {
+		this.entity.playStepSound(x, y, z, blockId);
+	}
+	
+	public void playSound(String sound) {
+		this.playSound(sound, this.getSoundVolume(), this.getSoundPitch());
+	}
+	
+	@Override
+	public void playSound(String sound, float volume, float pitch) {
+		this.entity.playSound(sound, volume, pitch);
+	}
+	
+	@Override
+	public String getDeathSound() {
+		if (this.entityLB != null) {
+			return this.entityLB.getDeathSound();
+		}
+		return super.getDeathSound();
+	}
+
+	@Override
+	public String getHurtSound() {
+		if (this.entityLB != null) {
+			return this.entityLB.getHurtSound();
+		}
+		return super.getHurtSound();
+	}
+	
+	public float getSoundVolume() {
+		if (this.entityLB != null) {
+			return this.entityLB.getSoundVolume();
+		}
+		return super.getSoundVolume();
+	}
+	
+	public float getSoundPitch() {
+		if (this.entityLB != null) {
+			return this.entityLB.getSoundPitch();
+		}
+		return super.getSoundPitch();
+	}
+	
 	//Required for EntityLivingBase
 	
 	@Override
 	public void performHurtAnimation() {
-		if (this.entityLB != null) {
-			this.entityLB.performHurtAnimation();
-		}
+		this.entity.performHurtAnimation();
 	}
 	
 	@Override
@@ -331,23 +390,17 @@ public class EntityDirector extends EntityLivingBase implements IEntityAdditiona
 
 	@Override
 	public void setCurrentItemOrArmor(int i, ItemStack itemStack) {
-		if (this.entity != null) {
-			this.entity.setCurrentItemOrArmor(i, itemStack);
-		}
+		this.entity.setCurrentItemOrArmor(i, itemStack);
 	}
 
 	@Override
 	public ItemStack[] getLastActiveItems() {
-		return this.entityLB == null ? null : this.entity.getLastActiveItems();
+		return this.entity.getLastActiveItems();
 	}
 
 	@Override
 	public void writeSpawnData(ByteArrayDataOutput data) {
-		/*if (this.entity instanceof Human) {
-			data.writeInt(-1);
-		} else {*/
-			data.writeInt(EntityList.getEntityID(this.entity));
-		//}
+		data.writeInt(EntityList.getEntityID(this.entity));
 	}
 
 	@Override

@@ -2,7 +2,6 @@ package mw.director;
 
 import java.util.Map;
 
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.network.Player;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
@@ -15,7 +14,6 @@ public class APIEntity {
 	public final String entityName;
 	
 	public APIEntity(API api, EntityDirector e, String name, Class<? extends Entity> ec) {
-		FMLLog.info("%s", ec.toString());
 		this.entity = e;
 		this.parts = DirectorMod.instance.parts.get(ec);
 		this.entityName = name;
@@ -27,6 +25,14 @@ public class APIEntity {
 			this.api.camera.reset();
 		}
 		this.entity.remove();
+	}
+	
+	public void die() {
+		DirectorPacketHandler.sendDieAnimation(this.entity.entityId, true);
+	}
+	
+	public void undie() {
+		DirectorPacketHandler.sendDieAnimation(this.entity.entityId, false);
 	}
 	
 	public void label(String label) {
@@ -103,6 +109,7 @@ public class APIEntity {
 	
 	public void hurt() {
 		DirectorPacketHandler.sendSetHurt(this.entity.entityId);
+		this.entity.playSound(this.entity.getHurtSound());
 	}
 	
 	protected int getId() {
@@ -117,8 +124,17 @@ public class APIEntity {
 		return this.entity.removeArrow();
 	}
 	
+	/*public void inventory(int slotId, String itemStr) {
+		
+	}*/
+	
+	public void inventory(int slotId, int itemId) {
+		this.inventory(slotId, itemId, 0);
+	}
+	
 	public void inventory(int slotId, int itemId, int meta) {
 		this.entity.setCurrentItemOrArmor(slotId, new ItemStack(itemId, 1, meta));
+		DirectorPacketHandler.sendSetInventory(this.entity.entityId, slotId, itemId, meta);
 	}
 	
 	public Object special(Object... values) {
