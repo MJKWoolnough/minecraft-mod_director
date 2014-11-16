@@ -33,10 +33,11 @@ public class DirectorPacketHandler extends PacketHandler {
 	private static final byte SETHURT = 9;
 	private static final byte SETBOBBING = 10;
 	private static final byte SETFOV = 11;
-	private static final byte SHOWGUI = 12;
-	private static final byte SETINVENTORY = 13;
-	private static final byte DIEANIMATION = 14;
-	private static final byte DIESPARKLES = 15;
+	private static final byte SETZOOM = 12;
+	private static final byte SHOWGUI = 13;
+	private static final byte SETINVENTORY = 14;
+	private static final byte DIEANIMATION = 15;
+	private static final byte DIESPARKLES = 16;
 	
 	private static DirectorPacketHandler instance;
 	
@@ -86,6 +87,9 @@ public class DirectorPacketHandler extends PacketHandler {
 				break;
 			case SETFOV:
 				this.handleSetFOV(in);
+				break;
+			case SETZOOM:
+				this.handleSetZoom(in);
 				break;
 			case SHOWGUI:
 				this.handleShowGUI(in);
@@ -221,6 +225,8 @@ public class DirectorPacketHandler extends PacketHandler {
 		EntityDirector director = this.getDirector(world, directorEntityId);
 		Minecraft mc = Minecraft.getMinecraft();
 		mc.entityRenderer.camRoll = 0;
+		mc.gameSettings.fovSetting = 0;
+		mc.entityRenderer.cameraZoom = 1;
 		if (director == null) {
 			mc.renderViewEntity = mc.thePlayer;
 		} else {
@@ -242,7 +248,11 @@ public class DirectorPacketHandler extends PacketHandler {
 	}
 	
 	private void handleSetFOV(ByteArrayDataInput in) {
-		Minecraft.getMinecraft().gameSettings.fovSetting = in.readFloat();
+		Minecraft.getMinecraft().gameSettings.fovSetting = (float) in.readDouble();
+	}
+	
+	private void handleSetZoom(ByteArrayDataInput in) {
+		Minecraft.getMinecraft().entityRenderer.cameraZoom = in.readDouble();
 	}
 	
 	private void handleShowGUI(ByteArrayDataInput in) {
@@ -418,11 +428,22 @@ public class DirectorPacketHandler extends PacketHandler {
 		DirectorPacketHandler.instance.sendPacket(pd, true, player);
 	}
 	
-	public static void sendSetFOV(Player player, float fov) {
-		PacketData pd = new PacketData(1 + 4);
+	public static void sendSetFOV(Player player, double fov) {
+		PacketData pd = new PacketData(1 + 8);
 		try {
 			pd.writeByte(SETFOV);
-			pd.writeFloat(fov);
+			pd.writeDouble(fov);
+		} catch (IOException e) {
+			return;
+		}
+		DirectorPacketHandler.instance.sendPacket(pd, true, player);
+	}
+	
+	public static void sendSetZoom(Player player, double zoom) {
+		PacketData pd = new PacketData(1 + 8);
+		try {
+			pd.writeByte(SETZOOM);
+			pd.writeDouble(zoom);
 		} catch (IOException e) {
 			return;
 		}

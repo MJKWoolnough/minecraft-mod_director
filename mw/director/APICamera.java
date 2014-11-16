@@ -18,13 +18,17 @@ public class APICamera {
 		DirectorPacketHandler.sendSetBobbing((Player) this.player, bob);
 	}
 	
-	public void fov(float fov) {
-		if (fov < -1.75f) {
-			fov = -1.75f;
-		} else if (fov > 2.65f) {
-			fov = 2.65f;
+	public void fov(float f) {
+		if (f < -1.75f) {
+			f = -1.75f;
+		} else if (f > 2.65f) {
+			f = 2.65f;
 		}
-		DirectorPacketHandler.sendSetFOV((Player) this.player, fov);
+		DirectorPacketHandler.sendSetFOV((Player) this.player, f);
+	}
+	
+	public void zoom(float z) {
+		DirectorPacketHandler.sendSetZoom((Player) this.player, z);
 	}
 	
 	public void showGUI(boolean show) {
