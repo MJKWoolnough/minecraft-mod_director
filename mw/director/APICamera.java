@@ -8,7 +8,7 @@ public class APICamera {
 	
 	private final EntityPlayer player;
 	protected int cameraId = -1;
-	private InventoryPlayer storedPlayerInventory = new InventoryPlayer(null);
+	private final InventoryPlayer storedPlayerInventory = new InventoryPlayer(null);
 	
 	public APICamera(EntityPlayer player) {
 		this.player = player;
@@ -34,6 +34,7 @@ public class APICamera {
 	public void set(APIEntity entity) {
 		if (this.cameraId == -1) {
 			this.storedPlayerInventory.copyInventory(this.player.inventory);
+			this.player.inventory.clearInventory(-1, -1);
 		}
 		this.player.inventory.copyInventory(new InventoryPlayer(null));
 		int entityId = entity.getId();
