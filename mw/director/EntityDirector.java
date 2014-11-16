@@ -154,6 +154,7 @@ public class EntityDirector extends EntityLivingBase implements IEntityAdditiona
 			entity = EntityList.createEntityByID(dEntityId, this.worldObj);
 		}
 		if (this.worldObj.isRemote) {
+			entity.riddenByEntity = this;
 			Render renderer = RenderManager.instance.getEntityRenderObject(entity);
 			if (renderer == null) {
 				this.isDead = true;
