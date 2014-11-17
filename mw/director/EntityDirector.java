@@ -1,5 +1,6 @@
 package mw.director;
 
+import java.io.IOException;
 import java.util.Map;
 
 import org.lwjgl.opengl.GL11;
@@ -12,7 +13,9 @@ import net.minecraft.client.renderer.texture.TextureObject;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
@@ -130,6 +133,7 @@ public class EntityDirector extends EntityLivingBase implements IEntityAdditiona
 	
 	protected Entity entity;
 	private EntityLivingBase entityLB;
+	private EntityItem entityItem;
 	
 	protected float prevRotationRoll;
 	protected float rotationRoll;
@@ -145,7 +149,7 @@ public class EntityDirector extends EntityLivingBase implements IEntityAdditiona
 		this.setPosition(x, y, z);
 		this.setEntity(dEntityId);
 	}
-	
+
 	public void setEntity(int dEntityId) {
 		Entity entity;
 		if (dEntityId == -1 && this.worldObj.isRemote) {
@@ -184,9 +188,17 @@ public class EntityDirector extends EntityLivingBase implements IEntityAdditiona
 			this.entityLB = (EntityLivingBase) entity;
 			this.entityLB.rotationYawHead = 0;
 			this.maxHurtTime = this.entityLB.maxHurtTime;
+		} else if (entity instanceof EntityItem) {
+			this.entityItem = (EntityItem) entity;
 		}
 	}
-	
+
+	public void setItem(ItemStack is) {
+		if (this.entityItem != null) {
+			this.entityItem.setEntityItemStack(is);
+		}
+	}
+
 	@Override
 	public void onUpdate() {
 		this.entity.prevPosX = this.prevPosX = this.posX;
@@ -199,6 +211,8 @@ public class EntityDirector extends EntityLivingBase implements IEntityAdditiona
 		this.aod.bodyOverrides(this);
 		if (this.entityLB != null) {
 			this.onLivingUpdate();
+		} else if (this.entityItem != null) {
+			this.onItemUpdate();
 		}
 		if (this.worldObj.isRemote) {
 			this.onClientUpdate();
@@ -207,6 +221,10 @@ public class EntityDirector extends EntityLivingBase implements IEntityAdditiona
 	
 	@Override
 	public void onLivingUpdate() {}
+	
+	public void onItemUpdate() {
+		this.entityItem.age++;
+	}
 	
 	public void onClientUpdate() {
 		this.pod.tick();
@@ -402,11 +420,23 @@ public class EntityDirector extends EntityLivingBase implements IEntityAdditiona
 	@Override
 	public void writeSpawnData(ByteArrayDataOutput data) {
 		data.writeInt(EntityList.getEntityID(this.entity));
+		if (this.entityItem != null) {
+			NBTTagCompound dataCompound = new NBTTagCompound();
+			this.entityItem.getEntityItem().writeToNBT(dataCompound);
+			try {
+				NBTBase.writeNamedTag(dataCompound, data);
+			} catch (IOException e) {}
+		}
 	}
 
 	@Override
 	public void readSpawnData(ByteArrayDataInput data) {
 		this.setEntity(data.readInt());
+		if (this.entityItem != null) {
+			try {
+				this.entityItem.setEntityItemStack(ItemStack.loadItemStackFromNBT((NBTTagCompound) NBTBase.readNamedTag(data)));
+			} catch (IOException e) {}
+		}
 	}
 	
 	@Override

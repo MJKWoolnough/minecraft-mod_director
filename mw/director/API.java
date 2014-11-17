@@ -13,6 +13,8 @@ import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.WorldInfo;
 
@@ -65,7 +67,7 @@ public class API {
 	public APIEntity spawn(String entityStr, float x, float y, float z) {
 		Integer entity = (Integer) EntityList.stringToIDMapping.get(entityStr);
 		if (entity != null) {
-			EntityDirector ed = new EntityDirector(this.world, x, y, z, entity.intValue());
+			EntityDirector ed = new EntityDirector(this.world, x, y, z, entity);
 			if (this.world.spawnEntityInWorld(ed)) {
 				Class<? extends Entity> entityClass = (Class<? extends Entity>) EntityList.IDtoClassMapping.get(entity);
 				Class<? extends APIEntity> apiClass = DirectorMod.instance.apis.get(entityClass);
@@ -80,6 +82,19 @@ public class API {
 		return null;
 	}
 	
+	public APIItem item(int itemId, int damage, int num, float x, float y, float z) {
+		Item item = Item.itemsList[itemId];
+		if (item == null) {
+			return null;
+		}
+		EntityDirector ed = new EntityDirector(this.world, x, y, z, (Integer) EntityList.stringToIDMapping.get("Item"));
+		ed.setItem(new ItemStack(itemId, num, damage));
+		if (this.world.spawnEntityInWorld(ed)) {
+			return new APIItem(this, ed);
+		}
+		return null;
+	}
+
 	public void removeAll() {
 		for (int i = 0; i < this.world.loadedEntityList.size(); i++) {
 			Entity entity = (Entity) this.world.loadedEntityList.get(i);
