@@ -138,6 +138,7 @@ public class EntityDirector extends EntityLivingBase implements IEntityAdditiona
 	protected float prevRotationRoll;
 	protected float rotationRoll;
 
+	private SpecialActions sa;
 	
 	public EntityDirector(World world) {
 		super(world);
@@ -191,6 +192,10 @@ public class EntityDirector extends EntityLivingBase implements IEntityAdditiona
 		} else if (entity instanceof EntityItem) {
 			this.entityItem = (EntityItem) entity;
 		}
+		Special s = DirectorMod.instance.apis.get(entity.getClass());
+		if (s != null) {
+			this.sa = s.getActions(entity);
+		}
 	}
 
 	public void setItem(ItemStack is) {
@@ -214,6 +219,9 @@ public class EntityDirector extends EntityLivingBase implements IEntityAdditiona
 		} else if (this.entityItem != null) {
 			this.onItemUpdate();
 		}
+		if (this.sa != null) {
+			this.sa.onUpdate();
+		}
 		if (this.worldObj.isRemote) {
 			this.onClientUpdate();
 		}
@@ -232,6 +240,9 @@ public class EntityDirector extends EntityLivingBase implements IEntityAdditiona
 		this.entity.rotationYaw = this.rotationYaw;
 		if (this.entityLB != null) {
 			this.onLivingClientUpdate();
+		}
+		if (this.sa != null) {
+			this.sa.onClientUpdate();
 		}
 	}
 	

@@ -24,7 +24,7 @@ public class DirectorMod {
 	public final Map<Class<? extends Render>, ModelOverrides[]> partRenderers = new HashMap();
 	
 	public final Map<Class<? extends Entity>, Map<String, Integer>> parts = new HashMap();
-	public final Map<Class<? extends Entity>, Class<? extends APIEntity>> apis = new HashMap();
+	public final Map<Class<? extends Entity>, Special> apis = new HashMap();
 	
 	@Instance("Director")
     public static DirectorMod instance;
