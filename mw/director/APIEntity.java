@@ -8,9 +8,9 @@ import net.minecraft.item.ItemStack;
 
 public class APIEntity {
 
-	private final EntityDirector entity;
-	private final Map<String, Integer> parts;
-	private final API api;
+	protected final EntityDirector entity;
+	protected final Map<String, Integer> parts;
+	protected final API api;
 	public final String entityName;
 	
 	public APIEntity(API api, EntityDirector e, String name, Class<? extends Entity> ec) {

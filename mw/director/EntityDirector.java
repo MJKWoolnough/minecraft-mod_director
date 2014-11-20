@@ -301,6 +301,10 @@ public class EntityDirector extends EntityLivingBase implements IEntityAdditiona
 		}
 	}
 	
+	public SpecialActions getSpecial() {
+		return this.sa;
+	}
+	
 	@Override
 	public void writeToNBT(NBTTagCompound nbtTag) {
 		super.writeToNBT(nbtTag);

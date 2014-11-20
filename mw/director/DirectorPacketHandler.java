@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
 
+import mw.director.specials.CreeperSpecial;
 import mw.library.PacketData;
 import mw.library.PacketHandler;
 import net.minecraft.client.Minecraft;
@@ -38,6 +39,7 @@ public class DirectorPacketHandler extends PacketHandler {
 	private static final byte SETINVENTORY = 14;
 	private static final byte DIEANIMATION = 15;
 	private static final byte DIESPARKLES = 16;
+	private static final byte CREEPERFUSE = 17;
 	
 	private static DirectorPacketHandler instance;
 	
@@ -102,6 +104,9 @@ public class DirectorPacketHandler extends PacketHandler {
 				break;
 			case DIESPARKLES:
 				this.handleDieSparkles(world, in);
+				break;
+			case CREEPERFUSE:
+				this.handleCreeperFuse(world, in);
 				break;
 			}
 		}
@@ -292,6 +297,17 @@ public class DirectorPacketHandler extends PacketHandler {
 			return;
 		}
 		director.dieSparkles();
+	}
+	
+	private void handleCreeperFuse(World world, ByteArrayDataInput in) {
+		int directorEntityId = in.readInt();
+		int fuseTime = in.readInt();
+		int ticks = in.readInt();
+		EntityDirector director = this.getDirector(world, directorEntityId);
+		if (director == null) {
+			return;
+		}
+		((CreeperSpecial) director.getSpecial()).startFuse(fuseTime, ticks);
 	}
 	
 	private EntityDirector getDirector(World world, int directorEntityId) {
@@ -492,6 +508,19 @@ public class DirectorPacketHandler extends PacketHandler {
 		try {
 			pd.writeByte(DIESPARKLES);
 			pd.writeInt(entityId);
+		} catch (IOException e) {
+			return;
+		}
+		DirectorPacketHandler.instance.sendPacket(pd, true);
+	}
+	
+	public static void sendCreeperFuse(int entityId, int fuseTime, int ticks) {
+		PacketData pd = new PacketData(1 + 4 + 4 + 4);
+		try {
+			pd.writeByte(CREEPERFUSE);
+			pd.writeInt(entityId);
+			pd.writeInt(fuseTime);
+			pd.writeInt(ticks);
 		} catch (IOException e) {
 			return;
 		}
