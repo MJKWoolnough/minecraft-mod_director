@@ -29,7 +29,7 @@ public class Special {
 		return this.actions;
 	}
 	
-	public SpecialActions getActions(Entity e) {
+	public SpecialActions getActions(EntityDirector ed, Entity e) {
 		if (this.actions == null) {
 			return null;
 		}
@@ -39,7 +39,7 @@ public class Special {
 		} catch (Exception e1) {
 			return null;
 		}
-		sa.setEntity(e);
+		sa.setEntity(ed, e);
 		return sa;
 	}
 }

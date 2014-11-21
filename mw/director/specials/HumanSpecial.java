@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.ImageBufferDownload;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
+import mw.director.EntityDirector;
 import mw.director.HumanClient;
 import mw.director.SpecialActions;
 
@@ -39,7 +40,7 @@ public class HumanSpecial implements SpecialActions {
 	}
 
 	@Override
-	public void setEntity(Entity e) {
+	public void setEntity(EntityDirector ed, Entity e) {
 		if (e instanceof HumanClient) {
 			this.entity = (HumanClient) e;
 		}

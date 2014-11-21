@@ -2,6 +2,7 @@ package mw.director.specials;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityCreeper;
+import mw.director.EntityDirector;
 import mw.director.SpecialActions;
 
 public class CreeperSpecial implements SpecialActions {
@@ -28,7 +29,7 @@ public class CreeperSpecial implements SpecialActions {
 	}
 
 	@Override
-	public void setEntity(Entity e) {
+	public void setEntity(EntityDirector ed, Entity e) {
 		this.creeper = (EntityCreeper) e;
 	}
 	
