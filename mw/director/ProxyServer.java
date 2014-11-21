@@ -5,6 +5,8 @@ import java.util.Map;
 
 import mw.director.specials.CreeperAPI;
 import mw.director.specials.CreeperSpecial;
+import mw.director.specials.HumanAPI;
+import mw.director.specials.HumanSpecial;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -53,6 +55,8 @@ public class ProxyServer {
 			API.body, API.head, API.headwear, API.rightArm, API.leftArm,
 			API.rightLeg, API.leftLeg, API.ears, API.cloak
 		);
+		this.setSpecial(Human.class, HumanAPI.class, HumanSpecial.class);
+		this.setSpecial(HumanClient.class, HumanAPI.class, HumanSpecial.class);
 	}
 	
 	public void wolf() {

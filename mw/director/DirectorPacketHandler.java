@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 import mw.director.specials.CreeperSpecial;
+import mw.director.specials.HumanSpecial;
 import mw.library.PacketData;
 import mw.library.PacketHandler;
 import net.minecraft.client.Minecraft;
@@ -40,6 +41,8 @@ public class DirectorPacketHandler extends PacketHandler {
 	private static final byte DIEANIMATION = 15;
 	private static final byte DIESPARKLES = 16;
 	private static final byte CREEPERFUSE = 17;
+	private static final byte SETHUMANSKIN = 18;
+	private static final byte SETHUMANCAPE = 19;
 	
 	private static DirectorPacketHandler instance;
 	
@@ -107,6 +110,12 @@ public class DirectorPacketHandler extends PacketHandler {
 				break;
 			case CREEPERFUSE:
 				this.handleCreeperFuse(world, in);
+				break;
+			case SETHUMANSKIN:
+				this.handleSetHumanSkin(world, in);
+				break;
+			case SETHUMANCAPE:
+				this.handleSetHumanCape(world, in);
 				break;
 			}
 		}
@@ -308,6 +317,26 @@ public class DirectorPacketHandler extends PacketHandler {
 			return;
 		}
 		((CreeperSpecial) director.getSpecial()).startFuse(fuseTime, ticks);
+	}
+	
+	private void handleSetHumanSkin(World world, ByteArrayDataInput in) {
+		int directorEntityId = in.readInt();
+		String skin = in.readUTF();
+		EntityDirector director = this.getDirector(world, directorEntityId);
+		if (director == null) {
+			return;
+		}
+		((HumanSpecial) director.getSpecial()).setSkin(skin);
+	}
+	
+	private void handleSetHumanCape(World world, ByteArrayDataInput in) {
+		int directorEntityId = in.readInt();
+		String cape = in.readUTF();
+		EntityDirector director = this.getDirector(world, directorEntityId);
+		if (director == null) {
+			return;
+		}
+		((HumanSpecial) director.getSpecial()).setCape(cape);
 	}
 	
 	private EntityDirector getDirector(World world, int directorEntityId) {
@@ -526,4 +555,29 @@ public class DirectorPacketHandler extends PacketHandler {
 		}
 		DirectorPacketHandler.instance.sendPacket(pd, true);
 	}
+
+	public static void sendSetHumanSkin(int directorEntityId, String skin) {
+		PacketData pd = new PacketData(1 + 4 + (2 + skin.length()));
+		try {
+			pd.writeByte(SETHUMANSKIN);
+			pd.writeInt(directorEntityId);
+			pd.writeUTF(skin);
+		} catch (IOException e) {
+			return;
+		}
+		DirectorPacketHandler.instance.sendPacket(pd, true);
+	}
+	
+	public static void sendSetHumanCape(int directorEntityId, String cape) {
+		PacketData pd = new PacketData(1 + 4 + (2 + cape.length()));
+		try {
+			pd.writeByte(SETHUMANCAPE);
+			pd.writeInt(directorEntityId);
+			pd.writeUTF(cape);
+		} catch (IOException e) {
+			return;
+		}
+		DirectorPacketHandler.instance.sendPacket(pd, true);
+	}
 }
+

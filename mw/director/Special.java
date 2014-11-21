@@ -30,6 +30,9 @@ public class Special {
 	}
 	
 	public SpecialActions getActions(Entity e) {
+		if (this.actions == null) {
+			return null;
+		}
 		SpecialActions sa;
 		try {
 			sa = this.actions.getConstructor().newInstance();

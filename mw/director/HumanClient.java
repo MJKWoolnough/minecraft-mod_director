@@ -8,8 +8,8 @@ import net.minecraft.world.World;
 
 public class HumanClient extends AbstractClientPlayer {
 
-	public HumanClient(World world) {
-		super(world, "Steve");
+	public HumanClient(World world, int id) {
+		super(world, "Human_" + Integer.toString(id));
 	}
 
 	@Override

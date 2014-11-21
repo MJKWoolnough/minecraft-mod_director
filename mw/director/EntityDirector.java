@@ -154,7 +154,7 @@ public class EntityDirector extends EntityLivingBase implements IEntityAdditiona
 	public void setEntity(int dEntityId) {
 		Entity entity;
 		if (dEntityId == -1 && this.worldObj.isRemote) {
-			entity = new HumanClient(this.worldObj);
+			entity = new HumanClient(this.worldObj, this.entityId);
 		} else {
 			entity = EntityList.createEntityByID(dEntityId, this.worldObj);
 		}
