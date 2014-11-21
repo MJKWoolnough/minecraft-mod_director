@@ -7,6 +7,8 @@ import mw.director.specials.CreeperAPI;
 import mw.director.specials.CreeperSpecial;
 import mw.director.specials.HumanAPI;
 import mw.director.specials.HumanSpecial;
+import mw.director.specials.WolfAPI;
+import mw.director.specials.WolfSpecial;
 import net.minecraft.command.ServerCommandManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -56,7 +58,6 @@ public class ProxyServer {
 			API.rightLeg, API.leftLeg, API.ears, API.cloak
 		);
 		this.setSpecial(Human.class, HumanAPI.class, HumanSpecial.class);
-		this.setSpecial(HumanClient.class, HumanAPI.class, HumanSpecial.class);
 	}
 	
 	public void wolf() {
@@ -64,6 +65,7 @@ public class ProxyServer {
 			API.body, API.head, API.backRightLeg, API.backLeftLeg,
 			API.frontRightLeg, API.frontLeftLeg, API.tail, API.mane
 		);
+		this.setSpecial(EntityWolf.class, WolfAPI.class, WolfSpecial.class);
 	}
 	
 	public void creeper() {

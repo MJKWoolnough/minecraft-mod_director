@@ -8,6 +8,7 @@ import java.util.Scanner;
 import mw.director.specials.AnimalSpecial;
 import mw.director.specials.CreeperSpecial;
 import mw.director.specials.HumanSpecial;
+import mw.director.specials.WolfSpecial;
 import mw.library.PacketData;
 import mw.library.PacketHandler;
 import net.minecraft.client.Minecraft;
@@ -46,6 +47,9 @@ public class DirectorPacketHandler extends PacketHandler {
 	private static final byte SETHUMANCAPE = 19;
 	private static final byte SETAGE = 20;
 	private static final byte SETLOVE = 21;
+	private static final byte SETWOLFTAMED = 22;
+	private static final byte SETWOLFANGRY = 23;
+	private static final byte SETWOLFCOLLARCOLOUR = 24;
 	
 	private static DirectorPacketHandler instance;
 	
@@ -125,6 +129,12 @@ public class DirectorPacketHandler extends PacketHandler {
 				break;
 			case SETLOVE:
 				this.handleSetLove(world, in);
+				break;
+			case SETWOLFTAMED:
+				this.handleSetWolfTamed(world, in);
+				break;
+			case SETWOLFANGRY:
+				this.handleSetWolfCollarColour(world, in);
 				break;
 			}
 		}
@@ -366,6 +376,36 @@ public class DirectorPacketHandler extends PacketHandler {
 			return;
 		}
 		((AnimalSpecial) director.getSpecial()).setLove(love);
+	}
+	
+	private void handleSetWolfAngry(World world, ByteArrayDataInput in) {
+		int directorEntityId = in.readInt();
+		boolean angry = in.readBoolean();
+		EntityDirector director = this.getDirector(world, directorEntityId);
+		if (director == null) {
+			return;
+		}
+		((WolfSpecial) director.getSpecial()).angry(angry);
+	}
+	
+	private void handleSetWolfTamed(World world, ByteArrayDataInput in) {
+		int directorEntityId = in.readInt();
+		boolean tamed = in.readBoolean();
+		EntityDirector director = this.getDirector(world, directorEntityId);
+		if (director == null) {
+			return;
+		}
+		((WolfSpecial) director.getSpecial()).tamed(tamed);
+	}
+	
+	private void handleSetWolfCollarColour(World world, ByteArrayDataInput in) {
+		int directorEntityId = in.readInt();
+		int colour = in.readInt();
+		EntityDirector director = this.getDirector(world, directorEntityId);
+		if (director == null) {
+			return;
+		}
+		((WolfSpecial) director.getSpecial()).collarColor(colour);
 	}
 	
 	private EntityDirector getDirector(World world, int directorEntityId) {
@@ -627,6 +667,42 @@ public class DirectorPacketHandler extends PacketHandler {
 			pd.writeByte(SETLOVE);
 			pd.writeInt(entityId);
 			pd.writeInt(love);
+		} catch (IOException e) {
+			return;
+		}
+		DirectorPacketHandler.instance.sendPacket(pd, true);
+	}
+
+	public static void sendWolfTamed(int entityId, boolean tame) {
+		PacketData pd = new PacketData(1 + 4 + 1);
+		try {
+			pd.writeByte(SETWOLFTAMED);
+			pd.writeInt(entityId);
+			pd.writeBoolean(tame);
+		} catch (IOException e) {
+			return;
+		}
+		DirectorPacketHandler.instance.sendPacket(pd, true);
+	}
+
+	public static void sendWolfAngry(int entityId, boolean angry) {
+		PacketData pd = new PacketData(1 + 4 + 1);
+		try {
+			pd.writeByte(SETWOLFANGRY);
+			pd.writeInt(entityId);
+			pd.writeBoolean(angry);
+		} catch (IOException e) {
+			return;
+		}
+		DirectorPacketHandler.instance.sendPacket(pd, true);
+	}
+
+	public static void sendWolfCollarColor(int entityId, int colour) {
+		PacketData pd = new PacketData(1 + 4 + 4);
+		try {
+			pd.writeByte(SETWOLFCOLLARCOLOUR);
+			pd.writeInt(entityId);
+			pd.writeInt(colour);
 		} catch (IOException e) {
 			return;
 		}

@@ -21,6 +21,7 @@ public class ProxyClient extends ProxyServer {
 	@Override
 	public void player() {
 		super.player();
+		DirectorMod.instance.apis.put(HumanClient.class, DirectorMod.instance.apis.get(Human.class));
 		DirectorMod.instance.parts.put(HumanClient.class, DirectorMod.instance.parts.get(Human.class));
 		RenderPlayer renderer = (RenderPlayer) RenderManager.instance.getEntityClassRenderObject(Human.class);
 		OverrideRenderer ro = new OverrideRenderer(9, RenderPlayer.class, renderer.mainModel, renderer.modelArmorChestplate, renderer.modelArmor);
