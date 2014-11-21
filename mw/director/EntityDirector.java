@@ -194,7 +194,7 @@ public class EntityDirector extends EntityLivingBase implements IEntityAdditiona
 		}
 		Special s = DirectorMod.instance.apis.get(entity.getClass());
 		if (s != null) {
-			this.sa = s.getActions(entity);
+			this.sa = s.getActions(this, entity);
 		}
 	}
 
@@ -452,6 +452,10 @@ public class EntityDirector extends EntityLivingBase implements IEntityAdditiona
 				this.entityItem.setEntityItemStack(ItemStack.loadItemStackFromNBT((NBTTagCompound) NBTBase.readNamedTag(data)));
 			} catch (IOException e) {}
 		}
+	}
+	
+	public void dSetSize(float width, float height) {
+		this.setSize(width, height);
 	}
 	
 	@Override

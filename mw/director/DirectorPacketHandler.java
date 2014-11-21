@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
 
+import mw.director.specials.AnimalSpecial;
 import mw.director.specials.CreeperSpecial;
 import mw.director.specials.HumanSpecial;
 import mw.library.PacketData;
@@ -43,6 +44,8 @@ public class DirectorPacketHandler extends PacketHandler {
 	private static final byte CREEPERFUSE = 17;
 	private static final byte SETHUMANSKIN = 18;
 	private static final byte SETHUMANCAPE = 19;
+	private static final byte SETAGE = 20;
+	private static final byte SETLOVE = 21;
 	
 	private static DirectorPacketHandler instance;
 	
@@ -116,6 +119,12 @@ public class DirectorPacketHandler extends PacketHandler {
 				break;
 			case SETHUMANCAPE:
 				this.handleSetHumanCape(world, in);
+				break;
+			case SETAGE:
+				this.handleSetAge(world, in);
+				break;
+			case SETLOVE:
+				this.handleSetLove(world, in);
 				break;
 			}
 		}
@@ -337,6 +346,26 @@ public class DirectorPacketHandler extends PacketHandler {
 			return;
 		}
 		((HumanSpecial) director.getSpecial()).setCape(cape);
+	}
+	
+	private void handleSetAge(World world, ByteArrayDataInput in) {
+		int directorEntityId = in.readInt();
+		int age = in.readInt();
+		EntityDirector director = this.getDirector(world, directorEntityId);
+		if (director == null) {
+			return;
+		}
+		((AnimalSpecial) director.getSpecial()).setAge(age);
+	}
+	
+	private void handleSetLove(World world, ByteArrayDataInput in) {
+		int directorEntityId = in.readInt();
+		int love = in.readInt();
+		EntityDirector director = this.getDirector(world, directorEntityId);
+		if (director == null) {
+			return;
+		}
+		((AnimalSpecial) director.getSpecial()).setLove(love);
 	}
 	
 	private EntityDirector getDirector(World world, int directorEntityId) {
@@ -574,6 +603,30 @@ public class DirectorPacketHandler extends PacketHandler {
 			pd.writeByte(SETHUMANCAPE);
 			pd.writeInt(directorEntityId);
 			pd.writeUTF(cape);
+		} catch (IOException e) {
+			return;
+		}
+		DirectorPacketHandler.instance.sendPacket(pd, true);
+	}
+
+	public static void sendSetAge(int entityId, int age) {
+		PacketData pd = new PacketData(1 + 4 + 4);
+		try {
+			pd.writeByte(SETAGE);
+			pd.writeInt(entityId);
+			pd.writeInt(age);
+		} catch (IOException e) {
+			return;
+		}
+		DirectorPacketHandler.instance.sendPacket(pd, true);
+	}
+	
+	public static void sendSetLove(int entityId, int love) {
+		PacketData pd = new PacketData(1 + 4 + 4);
+		try {
+			pd.writeByte(SETLOVE);
+			pd.writeInt(entityId);
+			pd.writeInt(love);
 		} catch (IOException e) {
 			return;
 		}
