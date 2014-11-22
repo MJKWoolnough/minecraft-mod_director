@@ -5,8 +5,6 @@ import java.lang.reflect.Field;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.entity.RendererLivingEntity;
 
 public class OverrideRenderer {
 	private final ModelBase[] models;

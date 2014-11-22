@@ -1,7 +1,6 @@
 package mw.director;
 
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.MathHelper;
 
 public class OverrideSpeed extends Overrides {
 	

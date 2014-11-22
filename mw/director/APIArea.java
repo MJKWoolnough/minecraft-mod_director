@@ -1,7 +1,7 @@
 package mw.director;
 
-import net.minecraft.world.World;
 import mw.library.Area;
+import net.minecraft.world.World;
 
 public class APIArea {
 	

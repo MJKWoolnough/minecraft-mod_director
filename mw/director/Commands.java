@@ -5,13 +5,12 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 
-import cpw.mods.fml.common.IScheduledTickHandler;
-import cpw.mods.fml.common.TickType;
-import cpw.mods.fml.common.network.Player;
-
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import cpw.mods.fml.common.IScheduledTickHandler;
+import cpw.mods.fml.common.TickType;
+import cpw.mods.fml.common.network.Player;
 
 public class Commands implements ICommand, IScheduledTickHandler  {
 	

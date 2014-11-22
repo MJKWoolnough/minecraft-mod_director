@@ -12,7 +12,6 @@ import mw.director.specials.WolfSpecial;
 import mw.library.PacketData;
 import mw.library.PacketHandler;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;

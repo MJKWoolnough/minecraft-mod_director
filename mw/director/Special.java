@@ -1,7 +1,5 @@
 package mw.director;
 
-import java.lang.reflect.InvocationTargetException;
-
 import net.minecraft.entity.Entity;
 
 public class Special {

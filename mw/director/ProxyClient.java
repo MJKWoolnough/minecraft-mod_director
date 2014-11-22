@@ -1,15 +1,11 @@
 package mw.director;
 
-import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.model.ModelCreeper;
-import net.minecraft.client.model.ModelWolf;
 import net.minecraft.client.renderer.entity.RenderCreeper;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.RenderWolf;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.passive.EntityWolf;
-import net.minecraft.entity.player.EntityPlayer;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 
 public class ProxyClient extends ProxyServer {

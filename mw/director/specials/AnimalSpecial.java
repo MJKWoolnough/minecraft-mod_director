@@ -1,9 +1,9 @@
 package mw.director.specials;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.passive.EntityAnimal;
 import mw.director.EntityDirector;
 import mw.director.SpecialActions;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.passive.EntityAnimal;
 
 public class AnimalSpecial implements SpecialActions {
 

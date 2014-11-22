@@ -9,9 +9,8 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import cpw.mods.fml.common.FMLLog;
-
 import net.minecraft.entity.player.EntityPlayer;
+import cpw.mods.fml.common.FMLLog;
 
 public class CommandsEngine {
 

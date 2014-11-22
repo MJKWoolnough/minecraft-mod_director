@@ -1,9 +1,9 @@
 package mw.director.specials;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.monster.EntityCreeper;
 import mw.director.EntityDirector;
 import mw.director.SpecialActions;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.monster.EntityCreeper;
 
 public class CreeperSpecial implements SpecialActions {
 

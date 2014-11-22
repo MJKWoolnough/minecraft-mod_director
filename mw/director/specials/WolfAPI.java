@@ -1,10 +1,9 @@
 package mw.director.specials;
 
-import net.minecraft.entity.Entity;
 import mw.director.API;
-import mw.director.APIEntity;
 import mw.director.DirectorPacketHandler;
 import mw.director.EntityDirector;
+import net.minecraft.entity.Entity;
 
 public class WolfAPI extends AnimalAPI {
 

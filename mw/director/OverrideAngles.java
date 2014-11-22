@@ -1,7 +1,6 @@
 package mw.director;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
 
 public class OverrideAngles extends Overrides {
 	

@@ -1,8 +1,5 @@
 package mw.director;
 
-import java.util.Map;
-
-import net.minecraft.entity.Entity;
 
 public class APIEntity {
 

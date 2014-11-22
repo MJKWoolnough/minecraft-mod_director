@@ -1,6 +1,5 @@
 package mw.director;
 
-import net.minecraft.entity.Entity;
 
 public class MoveToPosition {
 

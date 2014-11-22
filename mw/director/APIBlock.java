@@ -1,8 +1,8 @@
 package mw.director;
 
+import mw.library.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import mw.library.Blocks;
 
 public class APIBlock {
 	protected final Blocks block = new Blocks();

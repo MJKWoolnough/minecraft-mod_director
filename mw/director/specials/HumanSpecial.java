@@ -1,14 +1,12 @@
 package mw.director.specials;
 
+import mw.director.EntityDirector;
+import mw.director.HumanClient;
+import mw.director.SpecialActions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.ImageBufferDownload;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StringUtils;
-import mw.director.EntityDirector;
-import mw.director.HumanClient;
-import mw.director.SpecialActions;
 
 public class HumanSpecial implements SpecialActions {
 
