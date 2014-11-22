@@ -72,6 +72,9 @@ public class API {
 				Class<? extends Entity> entityClass = (Class<? extends Entity>) EntityList.IDtoClassMapping.get(entity);
 				Special special = DirectorMod.instance.apis.get(entityClass);
 				if (special == null) {
+					if (ed.entityLB != null) {
+						return new APIEntityLiving(this, ed, entityStr, entityClass);
+					}
 					return new APIEntity(this, ed, entityStr, entityClass);
 				}
 				return special.getAPI(this, ed, entityStr, entityClass);

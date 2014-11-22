@@ -132,7 +132,7 @@ public class EntityDirector extends EntityLivingBase implements IEntityAdditiona
 	private RenderActor renderer;
 	
 	protected Entity entity;
-	private EntityLivingBase entityLB;
+	protected EntityLivingBase entityLB;
 	private EntityItem entityItem;
 	
 	protected float prevRotationRoll;
