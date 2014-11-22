@@ -1,10 +1,11 @@
 package mw.director;
 
 public class Overrides {
-	protected final double[][] overrides;
-	protected final double[][] prevOverrides;
-	private final double[][][] toOverride;
-	
+
+	protected final double[][]	overrides;
+	protected final double[][]	prevOverrides;
+	private final double[][][]	toOverride;
+
 	public Overrides(int num) {
 		this.overrides = new double[num][3];
 		this.prevOverrides = new double[num][3];
@@ -17,7 +18,7 @@ public class Overrides {
 			}
 		}
 	}
-		
+
 	public void addOverride(int i, int j, double startValue, double endValue, int ticks) {
 		if (ticks > 0 && startValue == startValue && endValue == endValue) {
 			this.overrides[i][j] = startValue;

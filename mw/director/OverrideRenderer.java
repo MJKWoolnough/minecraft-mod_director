@@ -7,16 +7,17 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.entity.Render;
 
 public class OverrideRenderer {
-	private final ModelBase[] models;
-	private final ModelOverrides[] modelOverrides;
-	private int pos = 0;
-	
+
+	private final ModelBase[]	models;
+	private final ModelOverrides[]	modelOverrides;
+	private int			pos	= 0;
+
 	public OverrideRenderer(int numParts, Class<? extends Render> renderClass, ModelBase... models) {
 		this.models = models;
 		this.modelOverrides = new ModelOverrides[numParts];
 		DirectorMod.instance.partRenderers.put(renderClass, this.modelOverrides);
 	}
-	
+
 	public void OverrideModelRenderer(int... fieldNum) {
 		if (this.pos >= this.modelOverrides.length) {
 			return;

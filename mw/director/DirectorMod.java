@@ -15,29 +15,29 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-@Mod(modid="Director", name="Director", version="0.0.1", dependencies = "required-after:MWLibrary")
-@NetworkMod(clientSideRequired=true, serverSideRequired=true, channels = { DirectorPacketHandler.CHANNEL }, packetHandler = DirectorPacketHandler.class)
+@Mod(modid = "Director", name = "Director", version = "0.0.1", dependencies = "required-after:MWLibrary")
+@NetworkMod(clientSideRequired = true, serverSideRequired = true, channels = { DirectorPacketHandler.CHANNEL }, packetHandler = DirectorPacketHandler.class)
 public class DirectorMod {
-	
+
 	@SideOnly(Side.CLIENT)
-	public final Map<Class<? extends Render>, ModelOverrides[]> partRenderers = new HashMap();
-	
-	public final Map<Class<? extends Entity>, Map<String, Integer>> parts = new HashMap();
-	public final Map<Class<? extends Entity>, Special> apis = new HashMap();
-	
+	public final Map<Class<? extends Render>, ModelOverrides[]>	partRenderers	= new HashMap();
+
+	public final Map<Class<? extends Entity>, Map<String, Integer>>	parts		= new HashMap();
+	public final Map<Class<? extends Entity>, Special>		apis		= new HashMap();
+
 	@Instance("Director")
-    public static DirectorMod instance;
-	
+	public static DirectorMod					instance;
+
 	@SidedProxy(clientSide = "mw.director.ProxyClient", serverSide = "mw.director.ProxyServer")
-    public static ProxyServer proxy;
-   
-    @EventHandler
-    public void load(FMLInitializationEvent event) {
-    	this.proxy.load();
-    }
-    
-    @EventHandler
-    public void serverStart(FMLServerStartingEvent event) {
-    	this.proxy.serverStart(event.getServer());
-    }
+	public static ProxyServer					proxy;
+
+	@EventHandler
+	public void load(FMLInitializationEvent event) {
+		this.proxy.load();
+	}
+
+	@EventHandler
+	public void serverStart(FMLServerStartingEvent event) {
+		this.proxy.serverStart(event.getServer());
+	}
 }

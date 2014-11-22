@@ -9,11 +9,12 @@ import net.minecraft.world.World;
 public class Human extends EntityPlayer {
 
 	public Human(World world) {
-		super(world, ""); //username
+		super(world, ""); // username
 	}
 
 	@Override
-	public void sendChatToPlayer(ChatMessageComponent chatmessagecomponent) {}
+	public void sendChatToPlayer(ChatMessageComponent chatmessagecomponent) {
+	}
 
 	@Override
 	public boolean canCommandSenderUseCommand(int i, String s) {

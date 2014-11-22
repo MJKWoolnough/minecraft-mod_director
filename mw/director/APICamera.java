@@ -7,10 +7,10 @@ import cpw.mods.fml.common.network.Player;
 
 public class APICamera {
 
-	private final EntityPlayer player;
-	protected int cameraId = -1;
-	private final InventoryPlayer storedPlayerInventory = new InventoryPlayer(null);
-	private final InventoryPlayer inventory = new InventoryPlayer(null);
+	private final EntityPlayer	player;
+	protected int			cameraId		= -1;
+	private final InventoryPlayer	storedPlayerInventory	= new InventoryPlayer(null);
+	private final InventoryPlayer	inventory		= new InventoryPlayer(null);
 
 	public APICamera(EntityPlayer player) {
 		this.player = player;
@@ -58,7 +58,7 @@ public class APICamera {
 			this.cameraId = -1;
 		}
 	}
-	
+
 	public void setInventorySlotContents(int slotId, int itemId, int count, int damage) {
 		ItemStack is = new ItemStack(itemId, count, damage);
 		this.inventory.setInventorySlotContents(slotId, is);
@@ -66,7 +66,7 @@ public class APICamera {
 			this.player.inventory.setInventorySlotContents(slotId, is);
 		}
 	}
-	
+
 	public void setCurrentItem(int id) {
 		if (id < 0) {
 			id = 0;

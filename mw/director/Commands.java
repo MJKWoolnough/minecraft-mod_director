@@ -12,14 +12,14 @@ import cpw.mods.fml.common.IScheduledTickHandler;
 import cpw.mods.fml.common.TickType;
 import cpw.mods.fml.common.network.Player;
 
-public class Commands implements ICommand, IScheduledTickHandler  {
-	
-	public static final HashMap<Integer, CommandsEngine> engines = new HashMap<Integer, CommandsEngine>();
-	
-	private int tickGap = 0;
-	
-	//ICommand
-	
+public class Commands implements ICommand, IScheduledTickHandler {
+
+	public static final HashMap<Integer, CommandsEngine>	engines	= new HashMap<Integer, CommandsEngine>();
+
+	private int						tickGap	= 0;
+
+	// ICommand
+
 	@Override
 	public int compareTo(Object o) {
 		return o instanceof Commands ? 0 : 1;
@@ -47,12 +47,12 @@ public class Commands implements ICommand, IScheduledTickHandler  {
 			return;
 		}
 		CommandsEngine thisEngine = this.engines.get(player.entityId);
-		String message = ""; 
+		String message = "";
 		if (args.length > 0) {
 			if (args[0].equals("start")) {
 				if (thisEngine == null) {
 					message = "No file loaded";
-				} else if(!thisEngine.start()) {
+				} else if (!thisEngine.start()) {
 					message = "No actions to start";
 				} else {
 					message = "Starting";
@@ -102,13 +102,15 @@ public class Commands implements ICommand, IScheduledTickHandler  {
 		return false;
 	}
 
-	//IScheduledTickHandler
+	// IScheduledTickHandler
 
 	@Override
-	public void tickStart(EnumSet<TickType> type, Object... tickData) {}
+	public void tickStart(EnumSet<TickType> type, Object... tickData) {
+	}
 
 	@Override
-	public void tickEnd(EnumSet<TickType> type, Object... tickData) {}
+	public void tickEnd(EnumSet<TickType> type, Object... tickData) {
+	}
 
 	@Override
 	public EnumSet<TickType> ticks() {
@@ -124,7 +126,7 @@ public class Commands implements ICommand, IScheduledTickHandler  {
 	public int nextTickSpacing() {
 		int oldTickGap = this.tickGap;
 		this.tickGap = 20;
-		for(Integer dce : this.engines.keySet()) {
+		for (Integer dce : this.engines.keySet()) {
 			int gap = this.engines.get(dce).nextTickSpacing(oldTickGap);
 			if (gap == -1) {
 				this.engines.remove(dce);

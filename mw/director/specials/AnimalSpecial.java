@@ -7,8 +7,8 @@ import net.minecraft.entity.passive.EntityAnimal;
 
 public class AnimalSpecial implements SpecialActions {
 
-	private EntityAnimal entity;
-	private EntityDirector entityD;
+	private EntityAnimal	entity;
+	private EntityDirector	entityD;
 
 	@Override
 	public void onUpdate() {
@@ -30,15 +30,7 @@ public class AnimalSpecial implements SpecialActions {
 		if (this.entity.inLove > 0) {
 			this.entity.inLove--;
 			if (this.entity.inLove % 10 == 0) {
-				this.entity.worldObj.spawnParticle(
-					"heart",
-					this.entity.posX + this.entity.rand.nextFloat() * this.entity.width * 2.0D - this.entity.width,
-					this.entity.posY + this.entity.rand.nextFloat() * this.entity.height + 0.5,
-					this.entity.posZ + this.entity.rand.nextFloat() * this.entity.width * 2.0F - this.entity.width,
-					this.entity.rand.nextGaussian()/50,
-					this.entity.rand.nextGaussian()/50,
-					this.entity.rand.nextGaussian()/50
-				);
+				this.entity.worldObj.spawnParticle("heart", this.entity.posX + this.entity.rand.nextFloat() * this.entity.width * 2.0D - this.entity.width, this.entity.posY + this.entity.rand.nextFloat() * this.entity.height + 0.5, this.entity.posZ + this.entity.rand.nextFloat() * this.entity.width * 2.0F - this.entity.width, this.entity.rand.nextGaussian() / 50, this.entity.rand.nextGaussian() / 50, this.entity.rand.nextGaussian() / 50);
 			}
 		}
 	}

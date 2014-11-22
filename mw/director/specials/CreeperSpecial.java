@@ -7,12 +7,12 @@ import net.minecraft.entity.monster.EntityCreeper;
 
 public class CreeperSpecial implements SpecialActions {
 
-	private EntityCreeper creeper;
-	private int fuseTimer = 0;
-	
+	private EntityCreeper	creeper;
+	private int		fuseTimer	= 0;
+
 	@Override
 	public void onUpdate() {
-		
+
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class CreeperSpecial implements SpecialActions {
 	public void setEntity(EntityDirector ed, Entity e) {
 		this.creeper = (EntityCreeper) e;
 	}
-	
+
 	public void startFuse(int fuseTime, int ticks) {
 		this.creeper.fuseTime = fuseTime;
 		this.fuseTimer = ticks;

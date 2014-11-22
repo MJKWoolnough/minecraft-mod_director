@@ -16,9 +16,10 @@ public class HumanClient extends AbstractClientPlayer {
 	public String getTranslatedEntityName() {
 		return "";
 	}
-	
+
 	@Override
-	public void sendChatToPlayer(ChatMessageComponent chatmessagecomponent) {}
+	public void sendChatToPlayer(ChatMessageComponent chatmessagecomponent) {
+	}
 
 	@Override
 	public boolean canCommandSenderUseCommand(int i, String s) {

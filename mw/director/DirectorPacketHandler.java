@@ -22,41 +22,41 @@ import cpw.mods.fml.common.network.Player;
 
 public class DirectorPacketHandler extends PacketHandler {
 
-	public static final String CHANNEL = "directormod";
-	
-	private static final byte JSFILEREQUEST = 0;
-	private static final byte JSFILE = 1;
-	private static final byte SETPARTROTATION = 2;
-	private static final byte SETPARTPOSITION = 3;
-	private static final byte SETSCALE = 4;
-	private static final byte SETSKIN = 5;
-	private static final byte SETLABEL = 6;
-	private static final byte SETSPEED = 7;
-	private static final byte SETCAMERA = 8;
-	private static final byte SETHURT = 9;
-	private static final byte SETBOBBING = 10;
-	private static final byte SETFOV = 11;
-	private static final byte SETZOOM = 12;
-	private static final byte SHOWGUI = 13;
-	private static final byte SETINVENTORY = 14;
-	private static final byte DIEANIMATION = 15;
-	private static final byte DIESPARKLES = 16;
-	private static final byte CREEPERFUSE = 17;
-	private static final byte SETHUMANSKIN = 18;
-	private static final byte SETHUMANCAPE = 19;
-	private static final byte SETAGE = 20;
-	private static final byte SETLOVE = 21;
-	private static final byte SETWOLFTAMED = 22;
-	private static final byte SETWOLFANGRY = 23;
-	private static final byte SETWOLFCOLLARCOLOUR = 24;
-	
-	private static DirectorPacketHandler instance;
-	
+	public static final String		CHANNEL			= "directormod";
+
+	private static final byte		JSFILEREQUEST		= 0;
+	private static final byte		JSFILE			= 1;
+	private static final byte		SETPARTROTATION		= 2;
+	private static final byte		SETPARTPOSITION		= 3;
+	private static final byte		SETSCALE		= 4;
+	private static final byte		SETSKIN			= 5;
+	private static final byte		SETLABEL		= 6;
+	private static final byte		SETSPEED		= 7;
+	private static final byte		SETCAMERA		= 8;
+	private static final byte		SETHURT			= 9;
+	private static final byte		SETBOBBING		= 10;
+	private static final byte		SETFOV			= 11;
+	private static final byte		SETZOOM			= 12;
+	private static final byte		SHOWGUI			= 13;
+	private static final byte		SETINVENTORY		= 14;
+	private static final byte		DIEANIMATION		= 15;
+	private static final byte		DIESPARKLES		= 16;
+	private static final byte		CREEPERFUSE		= 17;
+	private static final byte		SETHUMANSKIN		= 18;
+	private static final byte		SETHUMANCAPE		= 19;
+	private static final byte		SETAGE			= 20;
+	private static final byte		SETLOVE			= 21;
+	private static final byte		SETWOLFTAMED		= 22;
+	private static final byte		SETWOLFANGRY		= 23;
+	private static final byte		SETWOLFCOLLARCOLOUR	= 24;
+
+	private static DirectorPacketHandler	instance;
+
 	public DirectorPacketHandler() {
 		super(CHANNEL);
 		this.instance = this;
 	}
-	
+
 	@Override
 	public void handlePacket(byte packetId, ByteArrayDataInput in, Player player) {
 		EntityPlayer entityPlayer = (EntityPlayer) player;
@@ -141,7 +141,7 @@ public class DirectorPacketHandler extends PacketHandler {
 			}
 		}
 	}
-	
+
 	private void handleJSFileRequest(ByteArrayDataInput in) {
 		String jsFile = in.readUTF();
 		if (jsFile.startsWith("~")) {
@@ -167,13 +167,13 @@ public class DirectorPacketHandler extends PacketHandler {
 	}
 
 	private void handleJSFile(EntityPlayer player, ByteArrayDataInput in) {
-		if (in.readByte() == 0) { 
+		if (in.readByte() == 0) {
 			Commands.engines.put(player.entityId, new CommandsEngine(player, in.readUTF()));
 		} else {
 			player.addChatMessage("Failed to load file " + in.readUTF());
 		}
 	}
-	
+
 	private void handleSetPartRotation(World world, ByteArrayDataInput in) {
 		int directorEntityId = in.readInt();
 		int partId = in.readInt();
@@ -187,7 +187,7 @@ public class DirectorPacketHandler extends PacketHandler {
 		}
 		director.aod.addOverride(partId, pyr, start, end, ticks);
 	}
-	
+
 	private void handleSetPartPosition(World world, ByteArrayDataInput in) {
 		int directorEntityId = in.readInt();
 		int partId = in.readInt();
@@ -201,7 +201,7 @@ public class DirectorPacketHandler extends PacketHandler {
 		}
 		director.pod.addOverride(partId, xyz, start, end, ticks);
 	}
-	
+
 	private void handleSetScale(World world, ByteArrayDataInput in) {
 		int directorEntityId = in.readInt();
 		int whd = in.readByte();
@@ -221,7 +221,7 @@ public class DirectorPacketHandler extends PacketHandler {
 			scod.addOverride(0, whd, start, end, ticks);
 		}
 	}
-	
+
 	private void handleSetSkin(World world, ByteArrayDataInput in) {
 		int directorEntityId = in.readInt();
 		String skin = in.readUTF();
@@ -231,7 +231,7 @@ public class DirectorPacketHandler extends PacketHandler {
 		}
 		director.setSkin(skin);
 	}
-	
+
 	private void handleSetLabel(World world, ByteArrayDataInput in) {
 		int directorEntityId = in.readInt();
 		String label = in.readUTF();
@@ -241,7 +241,7 @@ public class DirectorPacketHandler extends PacketHandler {
 		}
 		director.setLabel(label);
 	}
-	
+
 	private void handleSetSpeed(World world, ByteArrayDataInput in) {
 		int directorEntityId = in.readInt();
 		int xyz = in.readByte();
@@ -254,7 +254,7 @@ public class DirectorPacketHandler extends PacketHandler {
 		}
 		director.sod.addOverride(0, xyz, start, stop, ticks);
 	}
-	
+
 	private void handleSetCamera(World world, ByteArrayDataInput in) {
 		int directorEntityId = in.readInt();
 		EntityDirector director = this.getDirector(world, directorEntityId);
@@ -268,7 +268,7 @@ public class DirectorPacketHandler extends PacketHandler {
 			mc.renderViewEntity = director;
 		}
 	}
-	
+
 	private void handleSetHurt(World world, ByteArrayDataInput in) {
 		int directorEntityId = in.readInt();
 		EntityDirector director = this.getDirector(world, directorEntityId);
@@ -277,23 +277,23 @@ public class DirectorPacketHandler extends PacketHandler {
 		}
 		director.performHurtAnimation();
 	}
-	
+
 	private void handleSetBobbing(ByteArrayDataInput in) {
 		Minecraft.getMinecraft().gameSettings.viewBobbing = in.readBoolean();
 	}
-	
+
 	private void handleSetFOV(ByteArrayDataInput in) {
 		Minecraft.getMinecraft().gameSettings.fovSetting = (float) in.readDouble();
 	}
-	
+
 	private void handleSetZoom(ByteArrayDataInput in) {
 		Minecraft.getMinecraft().entityRenderer.cameraZoom = in.readDouble();
 	}
-	
+
 	private void handleShowGUI(ByteArrayDataInput in) {
 		Minecraft.getMinecraft().gameSettings.hideGUI = !in.readBoolean();
 	}
-	
+
 	private void handleSetInventory(World world, ByteArrayDataInput in) {
 		int directorEntityId = in.readInt();
 		int slotId = in.readByte();
@@ -305,7 +305,7 @@ public class DirectorPacketHandler extends PacketHandler {
 		}
 		director.setCurrentItemOrArmor(slotId, new ItemStack(itemId, 1, meta));
 	}
-	
+
 	private void handleDieAnimation(World world, ByteArrayDataInput in) {
 		int directorEntityId = in.readInt();
 		boolean doDie = in.readBoolean();
@@ -319,7 +319,7 @@ public class DirectorPacketHandler extends PacketHandler {
 			director.undie();
 		}
 	}
-	
+
 	private void handleDieSparkles(World world, ByteArrayDataInput in) {
 		int directorEntityId = in.readInt();
 		EntityDirector director = this.getDirector(world, directorEntityId);
@@ -328,7 +328,7 @@ public class DirectorPacketHandler extends PacketHandler {
 		}
 		director.dieSparkles();
 	}
-	
+
 	private void handleCreeperFuse(World world, ByteArrayDataInput in) {
 		int directorEntityId = in.readInt();
 		int fuseTime = in.readInt();
@@ -339,7 +339,7 @@ public class DirectorPacketHandler extends PacketHandler {
 		}
 		((CreeperSpecial) director.getSpecial()).startFuse(fuseTime, ticks);
 	}
-	
+
 	private void handleSetHumanSkin(World world, ByteArrayDataInput in) {
 		int directorEntityId = in.readInt();
 		String skin = in.readUTF();
@@ -349,7 +349,7 @@ public class DirectorPacketHandler extends PacketHandler {
 		}
 		((HumanSpecial) director.getSpecial()).setSkin(skin);
 	}
-	
+
 	private void handleSetHumanCape(World world, ByteArrayDataInput in) {
 		int directorEntityId = in.readInt();
 		String cape = in.readUTF();
@@ -359,7 +359,7 @@ public class DirectorPacketHandler extends PacketHandler {
 		}
 		((HumanSpecial) director.getSpecial()).setCape(cape);
 	}
-	
+
 	private void handleSetAge(World world, ByteArrayDataInput in) {
 		int directorEntityId = in.readInt();
 		int age = in.readInt();
@@ -369,7 +369,7 @@ public class DirectorPacketHandler extends PacketHandler {
 		}
 		((AnimalSpecial) director.getSpecial()).setAge(age);
 	}
-	
+
 	private void handleSetLove(World world, ByteArrayDataInput in) {
 		int directorEntityId = in.readInt();
 		int love = in.readInt();
@@ -379,7 +379,7 @@ public class DirectorPacketHandler extends PacketHandler {
 		}
 		((AnimalSpecial) director.getSpecial()).setLove(love);
 	}
-	
+
 	private void handleSetWolfAngry(World world, ByteArrayDataInput in) {
 		int directorEntityId = in.readInt();
 		boolean angry = in.readBoolean();
@@ -389,7 +389,7 @@ public class DirectorPacketHandler extends PacketHandler {
 		}
 		((WolfSpecial) director.getSpecial()).angry(angry);
 	}
-	
+
 	private void handleSetWolfTamed(World world, ByteArrayDataInput in) {
 		int directorEntityId = in.readInt();
 		boolean tamed = in.readBoolean();
@@ -399,7 +399,7 @@ public class DirectorPacketHandler extends PacketHandler {
 		}
 		((WolfSpecial) director.getSpecial()).tamed(tamed);
 	}
-	
+
 	private void handleSetWolfCollarColour(World world, ByteArrayDataInput in) {
 		int directorEntityId = in.readInt();
 		int colour = in.readInt();
@@ -409,7 +409,7 @@ public class DirectorPacketHandler extends PacketHandler {
 		}
 		((WolfSpecial) director.getSpecial()).collarColor(colour);
 	}
-	
+
 	private EntityDirector getDirector(World world, int directorEntityId) {
 		return (EntityDirector) world.getEntityByID(directorEntityId);
 	}
@@ -424,7 +424,7 @@ public class DirectorPacketHandler extends PacketHandler {
 		}
 		DirectorPacketHandler.instance.sendPacket(pd, true, player);
 	}
-	
+
 	public static void sendPartRotation(int directorEntityId, int partId, int pyr, float start, float end, int ticks) {
 		PacketData pd = new PacketData(1 + 4 + 4 + 1 + 4 + 4 + 4);
 		try {
@@ -440,7 +440,7 @@ public class DirectorPacketHandler extends PacketHandler {
 		}
 		DirectorPacketHandler.instance.sendPacket(pd, true);
 	}
-	
+
 	public static void sendPartPosition(int directorEntityId, int partId, int xyz, float start, float end, int ticks) {
 		PacketData pd = new PacketData(1 + 4 + 4 + 1 + 4 + 4 + 4);
 		try {
@@ -456,7 +456,7 @@ public class DirectorPacketHandler extends PacketHandler {
 		}
 		DirectorPacketHandler.instance.sendPacket(pd, true);
 	}
-	
+
 	public static void sendSetScale(int directorEntityId, int whd, float start, float end, int ticks) {
 		PacketData pd = new PacketData(1 + 4 + 1 + 4 + 4 + 4);
 		try {
@@ -471,7 +471,7 @@ public class DirectorPacketHandler extends PacketHandler {
 		}
 		DirectorPacketHandler.instance.sendPacket(pd, true);
 	}
-	
+
 	public static void sendSetSkin(int directorEntityId, String skin) {
 		PacketData pd = new PacketData(1 + 4 + (2 + skin.length()));
 		try {
@@ -483,7 +483,7 @@ public class DirectorPacketHandler extends PacketHandler {
 		}
 		DirectorPacketHandler.instance.sendPacket(pd, true);
 	}
-	
+
 	public static void sendSetLabel(int directorEntityId, String label) {
 		PacketData pd = new PacketData(1 + 4 + (2 + label.length()));
 		try {
@@ -510,7 +510,7 @@ public class DirectorPacketHandler extends PacketHandler {
 		}
 		DirectorPacketHandler.instance.sendPacket(pd, true);
 	}
-	
+
 	public static void sendSetCamera(Player player, int directorEntityId) {
 		PacketData pd = new PacketData(1 + 4);
 		try {
@@ -543,7 +543,7 @@ public class DirectorPacketHandler extends PacketHandler {
 		}
 		DirectorPacketHandler.instance.sendPacket(pd, true, player);
 	}
-	
+
 	public static void sendSetFOV(Player player, double fov) {
 		PacketData pd = new PacketData(1 + 8);
 		try {
@@ -554,7 +554,7 @@ public class DirectorPacketHandler extends PacketHandler {
 		}
 		DirectorPacketHandler.instance.sendPacket(pd, true, player);
 	}
-	
+
 	public static void sendSetZoom(Player player, double zoom) {
 		PacketData pd = new PacketData(1 + 8);
 		try {
@@ -565,7 +565,7 @@ public class DirectorPacketHandler extends PacketHandler {
 		}
 		DirectorPacketHandler.instance.sendPacket(pd, true, player);
 	}
-	
+
 	public static void sendShowGUI(Player player, boolean show) {
 		PacketData pd = new PacketData(1 + 1);
 		try {
@@ -613,7 +613,7 @@ public class DirectorPacketHandler extends PacketHandler {
 		}
 		DirectorPacketHandler.instance.sendPacket(pd, true);
 	}
-	
+
 	public static void sendCreeperFuse(int entityId, int fuseTime, int ticks) {
 		PacketData pd = new PacketData(1 + 4 + 4 + 4);
 		try {
@@ -638,7 +638,7 @@ public class DirectorPacketHandler extends PacketHandler {
 		}
 		DirectorPacketHandler.instance.sendPacket(pd, true);
 	}
-	
+
 	public static void sendSetHumanCape(int directorEntityId, String cape) {
 		PacketData pd = new PacketData(1 + 4 + (2 + cape.length()));
 		try {
@@ -662,7 +662,7 @@ public class DirectorPacketHandler extends PacketHandler {
 		}
 		DirectorPacketHandler.instance.sendPacket(pd, true);
 	}
-	
+
 	public static void sendSetLove(int entityId, int love) {
 		PacketData pd = new PacketData(1 + 4 + 4);
 		try {
@@ -711,4 +711,3 @@ public class DirectorPacketHandler extends PacketHandler {
 		DirectorPacketHandler.instance.sendPacket(pd, true);
 	}
 }
-

@@ -26,45 +26,46 @@ import com.google.common.io.ByteArrayDataOutput;
 import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 
 public class EntityDirector extends EntityLivingBase implements IEntityAdditionalSpawnData {
-	
+
 	protected class RenderActor {
-		private final Render renderer;
-		private Object oldTexture;
-		private boolean close = false;
-		
+
+		private final Render	renderer;
+		private Object		oldTexture;
+		private boolean		close	= false;
+
 		private RenderActor(Render renderer) {
 			this.renderer = renderer;
 		}
-		
+
 		public void preRender(double x, double y, double z, float yaw, float pTick, LabelRenderer nameRenderer) {
 			boolean roll = EntityDirector.this.rotationRoll != 0 || EntityDirector.this.prevRotationRoll != 0;
 			boolean pitch = EntityDirector.this.rotationPitch != 0 || EntityDirector.this.prevRotationPitch != 0;
 			boolean scale = EntityDirector.this.scod.needScale();
-			if (roll || pitch || scale){
+			if (roll || pitch || scale) {
 				this.close = true;
 				GL11.glPushMatrix();
 				GL11.glTranslated(x, y, z);
 			}
-			
+
 			if (scale) {
 				EntityDirector.this.scod.doScale(pTick);
 			}
-			
+
 			if (nameRenderer != null && EntityDirector.this.label != null && EntityDirector.this.label.length() > 0) {
 				if (this.close) {
 					float height = EntityDirector.this.height;
-					EntityDirector.this.height = EntityDirector.this.entity.height; 
+					EntityDirector.this.height = EntityDirector.this.entity.height;
 					nameRenderer.renderLabel(EntityDirector.this, 0, 0, 0);
 					EntityDirector.this.height = height;
 				} else {
 					nameRenderer.renderLabel(EntityDirector.this, x, y, z);
 				}
 			}
-			
+
 			if (this.close) {
 				GL11.glTranslated(0, EntityDirector.this.entity.height / 2, 0);
 			}
-			
+
 			if (roll) {
 				GL11.glRotatef(OverrideAngles.confineAngle(EntityDirector.this.prevRotationRoll + (EntityDirector.this.rotationRoll - EntityDirector.this.prevRotationRoll) * pTick), 0, 0, 1);
 			}
@@ -78,11 +79,11 @@ public class EntityDirector extends EntityLivingBase implements IEntityAdditiona
 				this.oldTexture = this.renderer.renderManager.renderEngine.mapTextureObjects.put(this.renderer.getEntityTexture(EntityDirector.this.entity), EntityDirector.this.texture);
 			}
 		}
-		
+
 		public void doRender(double x, double y, double z, float yaw, float pTick) {
 			this.renderer.doRender(EntityDirector.this.entity, x, y, z, yaw, pTick);
 		}
-		
+
 		public void postRender(double x, double y, double z, float yaw, float pTick) {
 			if (EntityDirector.this.texture != null) {
 				this.renderer.renderManager.renderEngine.mapTextureObjects.put(this.renderer.getEntityTexture(EntityDirector.this.entity), this.oldTexture);
@@ -92,20 +93,21 @@ public class EntityDirector extends EntityLivingBase implements IEntityAdditiona
 				this.close = false;
 			}
 		}
-		
+
 		public void doRenderShadowAndFire(double x, double y, double z, float yaw, float pTick) {
 			this.renderer.doRenderShadowAndFire(EntityDirector.this.entity, x, y, z, yaw, pTick);
 		}
 	}
-	
+
 	protected class RenderActorWithParts extends RenderActor {
-		private final ModelOverrides[] mo;
-		
+
+		private final ModelOverrides[]	mo;
+
 		public RenderActorWithParts(Render renderer, ModelOverrides[] mo) {
 			super(renderer);
 			this.mo = mo;
 		}
-		
+
 		@Override
 		public void doRender(double x, double y, double z, float yaw, float pTick) {
 			EntityDirector.this.aod.setRotations(this.mo, pTick);
@@ -114,36 +116,36 @@ public class EntityDirector extends EntityLivingBase implements IEntityAdditiona
 		}
 	}
 
-	private final static String nbtName = "actorId";
-	
-	public OverrideAngles aod;
-	public final OverrideSpeed sod = new OverrideSpeed();;
-	public final OverrideScale scod = new OverrideScale();
-	
-	public final MoveToEntity mte = new MoveToEntity(this);
-	public final MoveToPosition mtp = new MoveToPosition(this);
-	
-	protected String label = null;
-	private TextureObject texture;
-	
-	public OverridePoints pod;
-	
-	private RenderActor renderer;
-	
-	protected Entity entity;
-	protected EntityLivingBase entityLB;
-	private EntityItem entityItem;
-	
-	protected float prevRotationRoll;
-	protected float rotationRoll;
+	private final static String	nbtName	= "actorId";
 
-	private SpecialActions sa;
-	
+	public OverrideAngles		aod;
+	public final OverrideSpeed	sod	= new OverrideSpeed();		;
+	public final OverrideScale	scod	= new OverrideScale();
+
+	public final MoveToEntity	mte	= new MoveToEntity(this);
+	public final MoveToPosition	mtp	= new MoveToPosition(this);
+
+	protected String		label	= null;
+	private TextureObject		texture;
+
+	public OverridePoints		pod;
+
+	private RenderActor		renderer;
+
+	protected Entity		entity;
+	protected EntityLivingBase	entityLB;
+	private EntityItem		entityItem;
+
+	protected float			prevRotationRoll;
+	protected float			rotationRoll;
+
+	private SpecialActions		sa;
+
 	public EntityDirector(World world) {
 		super(world);
 		this.forceSpawn = true;
 	}
-	
+
 	public EntityDirector(World world, double x, double y, double z, int dEntityId) {
 		this(world);
 		this.setPosition(x, y, z);
@@ -178,7 +180,7 @@ public class EntityDirector extends EntityLivingBase implements IEntityAdditiona
 		} else {
 			this.aod = new OverrideAngles(1);
 		}
-		
+
 		this.entity = entity;
 		this.entity.rotationYaw = 0;
 		entity.yOffset = 0;
@@ -225,14 +227,15 @@ public class EntityDirector extends EntityLivingBase implements IEntityAdditiona
 			this.onClientUpdate();
 		}
 	}
-	
+
 	@Override
-	public void onLivingUpdate() {}
-	
+	public void onLivingUpdate() {
+	}
+
 	public void onItemUpdate() {
 		this.entityItem.age++;
 	}
-	
+
 	public void onClientUpdate() {
 		this.pod.tick();
 		this.entity.prevRotationYaw = this.prevRotationYaw;
@@ -244,23 +247,23 @@ public class EntityDirector extends EntityLivingBase implements IEntityAdditiona
 			this.sa.onClientUpdate();
 		}
 	}
-	
+
 	public void onLivingClientUpdate() {
 		this.entityLB.prevLimbSwingAmount = this.prevLimbSwingAmount;
 		this.entityLB.prevLimbSwingAmount = this.prevLimbSwingAmount;
-        this.entityLB.limbSwingAmount = this.limbSwingAmount;
-        this.entityLB.limbSwing = this.limbSwing;
-        this.entityLB.prevRenderYawOffset = this.prevRotationYaw;
+		this.entityLB.limbSwingAmount = this.limbSwingAmount;
+		this.entityLB.limbSwing = this.limbSwing;
+		this.entityLB.prevRenderYawOffset = this.prevRotationYaw;
 		this.entityLB.renderYawOffset = this.rotationYaw;
 		if (this.entityLB.hurtTime > 0) {
-            this.entityLB.hurtTime--;
-        }
-        if (this.entityLB.deathTime > 0 && this.entityLB.deathTime < 20) {
+			this.entityLB.hurtTime--;
+		}
+		if (this.entityLB.deathTime > 0 && this.entityLB.deathTime < 20) {
 			this.entityLB.deathTime++;
-        }
-        this.entityLB.setArrowCountInEntity(this.getArrowCountInEntity());
+		}
+		this.entityLB.setArrowCountInEntity(this.getArrowCountInEntity());
 	}
-	
+
 	private void speedUpdates() {
 		this.sod.updateSpeed(this);
 		this.entity.lastTickPosX = this.lastTickPosX = this.posX;
@@ -271,14 +274,14 @@ public class EntityDirector extends EntityLivingBase implements IEntityAdditiona
 		this.entity.posY = this.posY;
 		this.entity.posZ = this.posZ;
 	}
-	
+
 	public void remove() {
 		this.isDead = true;
 		if (this.entityLB != null) {
 			DirectorPacketHandler.sendDieSparkles(this.entityId);
 		}
 	}
-	
+
 	public void dieSparkles() {
 		if (this.entityLB.deathTime > 0) {
 			this.deathTime = 19;
@@ -287,44 +290,44 @@ public class EntityDirector extends EntityLivingBase implements IEntityAdditiona
 			this.isDead = oldDeath;
 		}
 	}
-	
+
 	public void die() {
 		if (this.entityLB != null) {
 			this.entityLB.deathTime = 1;
 		}
 	}
-	
+
 	public void undie() {
 		if (this.entityLB != null) {
 			this.entityLB.deathTime = 0;
 		}
 	}
-	
+
 	public SpecialActions getSpecial() {
 		return this.sa;
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound nbtTag) {
 		super.writeToNBT(nbtTag);
 		nbtTag.setInteger(nbtName, EntityList.getEntityID(this.entity));
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbtTag) {
 		super.readFromNBT(nbtTag);
 		this.setEntity(nbtTag.getInteger(nbtName));
 	}
-	
+
 	@Override
 	public boolean attackEntityFrom(DamageSource damageSource, float amount) {
 		return false;
 	}
-	
+
 	public RenderActor getRenderer() {
 		return this.renderer;
 	}
-	
+
 	public void setLabel(String label) {
 		if (label == "") {
 			this.label = null;
@@ -332,7 +335,7 @@ public class EntityDirector extends EntityLivingBase implements IEntityAdditiona
 			this.label = label;
 		}
 	}
-	
+
 	public void setSkin(String skin) {
 		if (skin == "") {
 			this.texture = null;
@@ -340,17 +343,17 @@ public class EntityDirector extends EntityLivingBase implements IEntityAdditiona
 			this.texture = AbstractClientPlayer.getDownloadImage(new ResourceLocation("web", skin), skin, this.getDefaultResourceLocation(), new ImageBufferDownloadTransparency());
 		}
 	}
-	
+
 	private ResourceLocation getDefaultResourceLocation() {
 		return this.renderer.renderer.getEntityTexture(this.entity);
 	}
-	
+
 	public int addArrow() {
 		int count = this.getArrowCountInEntity() + 1;
 		this.setArrowCountInEntity(count);
 		return count;
 	}
-	
+
 	public int removeArrow() {
 		int count = this.getArrowCountInEntity();
 		if (count > 0) {
@@ -359,21 +362,21 @@ public class EntityDirector extends EntityLivingBase implements IEntityAdditiona
 		}
 		return count;
 	}
-	
+
 	@Override
 	public void playStepSound(int x, int y, int z, int blockId) {
 		this.entity.playStepSound(x, y, z, blockId);
 	}
-	
+
 	public void playSound(String sound) {
 		this.playSound(sound, this.getSoundVolume(), this.getSoundPitch());
 	}
-	
+
 	@Override
 	public void playSound(String sound, float volume, float pitch) {
 		this.entity.playSound(sound, volume, pitch);
 	}
-	
+
 	@Override
 	public String getDeathSound() {
 		if (this.entityLB != null) {
@@ -389,36 +392,38 @@ public class EntityDirector extends EntityLivingBase implements IEntityAdditiona
 		}
 		return super.getHurtSound();
 	}
-	
+
 	public float getSoundVolume() {
 		if (this.entityLB != null) {
 			return this.entityLB.getSoundVolume();
 		}
 		return super.getSoundVolume();
 	}
-	
+
 	public float getSoundPitch() {
 		if (this.entityLB != null) {
 			return this.entityLB.getSoundPitch();
 		}
 		return super.getSoundPitch();
 	}
-	
-	//Required for EntityLivingBase
-	
+
+	// Required for EntityLivingBase
+
 	@Override
 	public void performHurtAnimation() {
 		this.entity.performHurtAnimation();
 	}
-	
+
 	@Override
 	public ItemStack getHeldItem() {
-		return this.entityLB == null ? null : this.entityLB.getHeldItem();
+		return this.entityLB == null ? null
+				: this.entityLB.getHeldItem();
 	}
 
 	@Override
 	public ItemStack getCurrentItemOrArmor(int i) {
-		return this.entityLB == null ? null : this.entityLB.getCurrentItemOrArmor(i);
+		return this.entityLB == null ? null
+				: this.entityLB.getCurrentItemOrArmor(i);
 	}
 
 	@Override
@@ -452,11 +457,11 @@ public class EntityDirector extends EntityLivingBase implements IEntityAdditiona
 			} catch (IOException e) {}
 		}
 	}
-	
+
 	public void dSetSize(float width, float height) {
 		this.setSize(width, height);
 	}
-	
+
 	@Override
 	protected void setSize(float width, float height) {
 		super.setSize(width, height);

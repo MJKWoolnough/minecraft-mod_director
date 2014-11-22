@@ -5,13 +5,13 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class ModelRendererD extends ModelRenderer {
-	
-	private final ModelOverrides overrides;
-	
-	public static final float DEGtoRAD = (float)Math.PI / 180;
-	
-	protected static boolean override = false;
-	
+
+	private final ModelOverrides	overrides;
+
+	public static final float	DEGtoRAD	= (float) Math.PI / 180;
+
+	protected static boolean	override	= false;
+
 	public ModelRendererD(ModelRenderer mr, ModelOverrides overrides) {
 		super(mr.baseModel, mr.boxName);
 		this.setTextureOffset(mr.textureOffsetX, mr.textureOffsetY);
@@ -30,7 +30,7 @@ public class ModelRendererD extends ModelRenderer {
 		this.childModels = mr.childModels;
 		this.overrides = overrides;
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public void render(float par1) {
 		if (override) {

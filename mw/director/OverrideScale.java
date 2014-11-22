@@ -3,11 +3,11 @@ package mw.director;
 import org.lwjgl.opengl.GL11;
 
 public class OverrideScale extends Overrides {
-	
+
 	public OverrideScale() {
 		super(1);
 	}
-	
+
 	public void doScale(float pTick) {
 		double[] scales = new double[3];
 		boolean override = false;
@@ -20,11 +20,11 @@ public class OverrideScale extends Overrides {
 		}
 		GL11.glScaled(scales[0], scales[1], scales[2]);
 	}
-	
+
 	public boolean needScale() {
 		return this.overrides[0][0] == this.overrides[0][0] || this.overrides[0][1] == this.overrides[0][1] || this.overrides[0][2] == this.overrides[0][2];
 	}
-	
+
 	public void scaleOverrides(EntityDirector e) {
 		float width = e.entity.width;
 		float height = e.entity.height;
@@ -48,5 +48,5 @@ public class OverrideScale extends Overrides {
 			e.setSize(width, height);
 		}
 	}
-	
+
 }

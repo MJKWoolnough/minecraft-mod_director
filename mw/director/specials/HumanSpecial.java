@@ -10,10 +10,11 @@ import net.minecraft.entity.Entity;
 
 public class HumanSpecial implements SpecialActions {
 
-	private HumanClient entity;
-	
+	private HumanClient	entity;
+
 	@Override
-	public void onUpdate() {}
+	public void onUpdate() {
+	}
 
 	@Override
 	public void onClientUpdate() {
@@ -43,12 +44,12 @@ public class HumanSpecial implements SpecialActions {
 			this.entity = (HumanClient) e;
 		}
 	}
-	
+
 	public void setSkin(String skin) {
 		Minecraft.getMinecraft().getTextureManager().mapTextureObjects.remove(this.entity.locationSkin);
 		this.entity.downloadImageSkin = AbstractClientPlayer.getDownloadImage(this.entity.locationSkin, skin, AbstractClientPlayer.locationStevePng, new ImageBufferDownload());
 	}
-	
+
 	public void setCape(String cape) {
 		Minecraft.getMinecraft().getTextureManager().mapTextureObjects.remove(this.entity.locationCape);
 		this.entity.downloadImageCape = AbstractClientPlayer.getDownloadImage(this.entity.locationCape, cape, null, null);
