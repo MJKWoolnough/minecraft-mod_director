@@ -2,6 +2,7 @@ package mw.director;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.network.Player;
 
 public class APICamera {
@@ -9,6 +10,7 @@ public class APICamera {
 	private final EntityPlayer player;
 	protected int cameraId = -1;
 	private final InventoryPlayer storedPlayerInventory = new InventoryPlayer(null);
+	private final InventoryPlayer inventory = new InventoryPlayer(null);
 
 	public APICamera(EntityPlayer player) {
 		this.player = player;
@@ -54,6 +56,26 @@ public class APICamera {
 			this.player.inventory.copyInventory(this.storedPlayerInventory);
 			DirectorPacketHandler.sendSetCamera((Player) this.player, -1);
 			this.cameraId = -1;
+		}
+	}
+	
+	public void setInventorySlotContents(int slotId, int itemId, int count, int damage) {
+		ItemStack is = new ItemStack(itemId, count, damage);
+		this.inventory.setInventorySlotContents(slotId, is);
+		if (this.cameraId != -1) {
+			this.player.inventory.setInventorySlotContents(slotId, is);
+		}
+	}
+	
+	public void setCurrentItem(int id) {
+		if (id < 0) {
+			id = 0;
+		} else if (id > 9) {
+			id = 9;
+		}
+		this.inventory.currentItem = id;
+		if (this.cameraId != -1) {
+			this.player.inventory.currentItem = id;
 		}
 	}
 }
