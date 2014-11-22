@@ -70,11 +70,11 @@ public class API {
 			EntityDirector ed = new EntityDirector(this.world, x, y, z, entity);
 			if (this.world.spawnEntityInWorld(ed)) {
 				Class<? extends Entity> entityClass = (Class<? extends Entity>) EntityList.IDtoClassMapping.get(entity);
-				Special special = DirectorMod.instance.apis.get(entityClass);
-				if (special == null) {
-					special = Special.noSpecial;
+				Special api = DirectorMod.instance.apis.get(entityClass);
+				if (api == null) {
+					api = Special.none;
 				}
-				return special.getAPI(this, ed, entityStr, entityClass);
+				return api.getAPI(this, ed, entityStr, entityClass);
 			}
 		}
 		return null;

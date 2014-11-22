@@ -6,7 +6,7 @@ import net.minecraft.entity.Entity;
 
 public class Special {
 	
-	public static final Special noSpecial = new Special(null, null);
+	public static final Special none = new Special(null, null);
 	
 	private final Class<? extends APIEntity> api;
 	private final Class<? extends SpecialActions> actions;
