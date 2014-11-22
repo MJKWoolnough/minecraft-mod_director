@@ -5,6 +5,9 @@ import java.lang.reflect.InvocationTargetException;
 import net.minecraft.entity.Entity;
 
 public class Special {
+	
+	public static final Special noSpecial = new Special(null, null);
+	
 	private final Class<? extends APIEntity> api;
 	private final Class<? extends SpecialActions> actions;
 	
@@ -18,11 +21,15 @@ public class Special {
 	}
 	
 	public APIEntity getAPI(API api, EntityDirector ed, String entityStr, Class<? extends Entity> entityClass) {
-		try {
-			return this.api.getConstructor(API.class, EntityDirector.class, String.class, Class.class).newInstance(api, ed, entityStr, entityClass);
-		} catch (Exception e) {
-			return new APIEntity(api, ed, entityStr, entityClass);
+		if (this.api != null) {
+			try {
+				return this.api.getConstructor(API.class, EntityDirector.class, String.class, Class.class).newInstance(api, ed, entityStr, entityClass);
+			} catch (Exception e) {}
 		}
+		if (ed.entityLB != null) {
+			return new APIEntityLiving(api, ed, entityStr, entityClass);
+		}
+		return new APIEntity(api, ed, entityStr);
 	}
 	
 	public Class<? extends SpecialActions> getActions() {

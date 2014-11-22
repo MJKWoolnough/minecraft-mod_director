@@ -7,13 +7,11 @@ import net.minecraft.entity.Entity;
 public class APIEntity {
 
 	protected final EntityDirector entity;
-	protected final Map<String, Integer> parts;
 	protected final API api;
 	public final String entityName;
 	
-	public APIEntity(API api, EntityDirector e, String name, Class<? extends Entity> ec) {
+	public APIEntity(API api, EntityDirector e, String name) {
 		this.entity = e;
-		this.parts = DirectorMod.instance.parts.get(ec);
 		this.entityName = name;
 		this.api = api;
 	}

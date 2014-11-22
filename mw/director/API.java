@@ -72,10 +72,7 @@ public class API {
 				Class<? extends Entity> entityClass = (Class<? extends Entity>) EntityList.IDtoClassMapping.get(entity);
 				Special special = DirectorMod.instance.apis.get(entityClass);
 				if (special == null) {
-					if (ed.entityLB != null) {
-						return new APIEntityLiving(this, ed, entityStr, entityClass);
-					}
-					return new APIEntity(this, ed, entityStr, entityClass);
+					special = Special.noSpecial;
 				}
 				return special.getAPI(this, ed, entityStr, entityClass);
 			}
@@ -83,15 +80,16 @@ public class API {
 		return null;
 	}
 	
-	public APIItem item(int itemId, int damage, int num, float x, float y, float z) {
+	public APIEntity item(int itemId, int damage, int num, float x, float y, float z) {
 		Item item = Item.itemsList[itemId];
 		if (item == null) {
 			return null;
 		}
 		EntityDirector ed = new EntityDirector(this.world, x, y, z, (Integer) EntityList.stringToIDMapping.get("Item"));
-		ed.setItem(new ItemStack(itemId, num, damage));
+		ItemStack is = new ItemStack(itemId, num, damage);
+		ed.setItem(is);
 		if (this.world.spawnEntityInWorld(ed)) {
-			return new APIItem(this, ed);
+			return new APIEntity(this, ed, item.getUnlocalizedName(is));
 		}
 		return null;
 	}

@@ -1,12 +1,17 @@
 package mw.director;
 
+import java.util.Map;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 
 public class APIEntityLiving extends APIEntity {
 	
+	protected final Map<String, Integer> parts;
+	
 	public APIEntityLiving(API api, EntityDirector e, String name, Class<? extends Entity> ec) {
-		super(api, e, name, ec);
+		super(api, e, name);
+		this.parts = DirectorMod.instance.parts.get(ec);
 	}
 
 	public void die() {
