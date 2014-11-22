@@ -39,10 +39,6 @@ public class APICamera {
 		this.set(entity.getId());
 	}
 
-	public void set(APIItem item) {
-		this.set(item.getId());
-	}
-
 	private void set(int entityId) {
 		if (this.cameraId == -1) {
 			this.storedPlayerInventory.copyInventory(this.player.inventory);
