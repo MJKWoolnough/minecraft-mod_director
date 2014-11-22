@@ -134,6 +134,9 @@ public class DirectorPacketHandler extends PacketHandler {
 				this.handleSetWolfTamed(world, in);
 				break;
 			case SETWOLFANGRY:
+				this.handleSetWolfAngry(world, in);
+				break;
+			case SETWOLFCOLLARCOLOUR:
 				this.handleSetWolfCollarColour(world, in);
 				break;
 			}
